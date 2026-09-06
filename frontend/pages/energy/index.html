@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WAFAR - Energy Overview</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="energy.css">
+</head>
+
+<body>
+
+  <!-- Backdrop for mobile drawer -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <div class="app-layout">
+    
+    <!-- ========================================================================
+         SIDEBAR
+         ======================================================================== -->
+    <aside class="sidebar" id="appSidebar">
+      <!-- Brand Logo -->
+      <div class="sidebar-brand">
+        <a href="../dashboard/index.html" class="brand-logo-link">
+          <img src="../../assets/images/WAFAR-LOGO .png" alt="WAFAR Logo" class="brand-logo-img" onerror="this.src='../../assets/images/WAFAR-LOGO.jpeg'">
+        </a>
+        <span class="brand-tagline" data-i18n="tagline">Smart Energy. Better Tomorrow.</span>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="nav-menu">
+        <a href="../dashboard/index.html" class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+              <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+              <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+              <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+            </svg>
+          </span>
+          <span class="nav-label" data-i18n="nav_dashboard">Dashboard</span>
+        </a>
+
+        <a href="../devices/index.html" class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+            </svg>
+          </span>
+          <span class="nav-label" data-i18n="nav_apartment">Apartment & Lamp</span>
+          <span class="nav-badge badge-on" id="sidebarLampBadge">ON</span>
+        </a>
+
+        <a href="../energy/index.html" class="nav-item active">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          </span>
+          <span class="nav-label" data-i18n="nav_energy">Energy</span>
+        </a>
+
+        <a href="../points/index.html" class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </span>
+          <span class="nav-label" data-i18n="nav_points">WAFAR Points</span>
+          <span class="nav-badge badge-points">80 pts</span>
+        </a>
+
+        <a href="../billing/index.html" class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <line x1="2" y1="10" x2="22" y2="10"></line>
+            </svg>
+          </span>
+          <span class="nav-label" data-i18n="nav_billing">Billing</span>
+        </a>
+
+        <a href="../assistant/index.html" class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </span>
+          <span class="nav-label" data-i18n="nav_assistant">AI Assistant</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar User Profile -->
+      <div class="sidebar-user">
+        <div class="user-avatar">AM</div>
+        <div class="user-info">
+          <div class="user-name" data-i18n="user_name">Abdalla M.</div>
+          <div class="user-apt" data-i18n="user_location">Apartment #4</div>
+        </div>
+        <a href="#" class="user-menu-btn" title="Sign Out" onclick="AuthAPI.signOut(); return false;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <!-- ========================================================================
+         MAIN CONTENT WRAPPER
+         ======================================================================== -->
+    <main class="main-wrapper">
+      
+      <!-- Top Breadcrumb -->
+      <div class="breadcrumb-bar">
+        <a href="../dashboard/index.html">WAFAR</a>
+        <span>/</span>
+        <span class="breadcrumb-current" data-i18n="nav_energy">Energy</span>
+      </div>
+
+      <!-- Top Header with Actions -->
+      <header class="top-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button class="mobile-menu-btn" id="mobileToggleBtn" aria-label="Toggle Sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          
+          <div class="welcome-group">
+            <h1>
+              <span data-i18n="energy_overview_title">Energy Overview</span>
+              <span class="welcome-leaf">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.5 2 2 6.5 2 12c0 3.5 1.8 6.6 4.6 8.4C6.2 19 6 17.5 6 16c0-4.4 3.6-8 8-8 1.5 0 3 .2 4.4.6C16.6 3.8 13.5 2 12 2z"/>
+                </svg>
+              </span>
+            </h1>
+            <p data-i18n="energy_overview_sub">Track your consumption and save more energy.</p>
+          </div>
+        </div>
+
+        <!-- Period Filter Pills -->
+        <div class="period-filter-group">
+          <button class="period-btn active" id="btnWeekPeriod" onclick="setPeriod('week')" data-i18n="btn_period_week">Week</button>
+          <button class="period-btn" id="btnMonthPeriod" onclick="setPeriod('month')" data-i18n="btn_period_month">Month</button>
+          <button class="filter-icon-btn" title="Filter" onclick="showToast('Advanced filters')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="4" y1="21" x2="4" y2="14"></line>
+              <line x1="4" y1="10" x2="4" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12" y2="3"></line>
+              <line x1="20" y1="21" x2="20" y2="16"></line>
+              <line x1="20" y1="12" x2="20" y2="3"></line>
+              <line x1="1" y1="14" x2="7" y2="14"></line>
+              <line x1="9" y1="8" x2="15" y2="8"></line>
+              <line x1="17" y1="16" x2="23" y2="16"></line>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Header Controls -->
+        <div class="header-actions">
+          <!-- Live Date & Time -->
+          <div class="header-pill-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span id="headerLiveTime">Tue, Sep 1, 09:11 PM</span>
+          </div>
+
+          <!-- Language Switcher -->
+          <div class="dropdown-container">
+            <button class="header-pill-btn" id="langSwitchBtn" onclick="i18n.toggleLanguage()">
+              <span id="currentLangLabel">عربي</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Theme Toggle -->
+          <button class="header-icon-btn" id="themeToggleBtn" title="Toggle Theme" onclick="toggleAppTheme()">
+            <svg id="themeIconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- ====================================================================
+           TOP 3 KPI METRIC CARDS ROW
+           ==================================================================== -->
+      <section class="kpi-3-grid">
+        
+        <!-- KPI 1: Today's Consumption -->
+        <div class="card kpi-card">
+          <div class="kpi-header">
+            <div class="kpi-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+            </div>
+            <span class="kpi-title" data-i18n="kpi_energy_today">TODAY'S CONSUMPTION</span>
+          </div>
+          <div class="kpi-value-row">
+            <span class="kpi-number">11.90</span>
+            <span class="kpi-unit">kWh</span>
+          </div>
+          <div class="kpi-footer">
+            <span class="chip-pill" data-i18n="kpi_energy_saved_badge">↓ 0.59 kWh saved vs yesterday</span>
+          </div>
+          <!-- Rising Green Wave Sparkline -->
+          <div class="kpi-sparkline">
+            <svg viewBox="0 0 120 45" preserveAspectRatio="none">
+              <path d="M0,38 Q30,35 60,25 T100,12 T120,6" fill="none" stroke="#4d6d39" stroke-width="2.5" stroke-linecap="round"></path>
+            </svg>
+          </div>
+        </div>
+
+        <!-- KPI 2: Total Energy (This Month) -->
+        <div class="card kpi-card">
+          <div class="kpi-header">
+            <div class="kpi-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="12" width="4" height="8" rx="1"></rect>
+                <rect x="10" y="8" width="4" height="12" rx="1"></rect>
+                <rect x="17" y="4" width="4" height="16" rx="1"></rect>
+              </svg>
+            </div>
+            <span class="kpi-title" data-i18n="kpi_energy_total_month">TOTAL ENERGY (THIS MONTH)</span>
+          </div>
+          <div class="kpi-value-row">
+            <span class="kpi-number">215.4</span>
+            <span class="kpi-unit">kWh</span>
+          </div>
+          <div class="kpi-footer">
+            <span class="kpi-subtext" data-i18n="kpi_energy_cycle">August Cycle</span>
+          </div>
+          <!-- 5 Vertical Mini Green Bars -->
+          <div class="kpi-mini-bars">
+            <div class="mini-bar" style="height: 14px;"></div>
+            <div class="mini-bar" style="height: 22px;"></div>
+            <div class="mini-bar" style="height: 30px;"></div>
+            <div class="mini-bar" style="height: 36px;"></div>
+            <div class="mini-bar" style="height: 44px;"></div>
+          </div>
+        </div>
+
+        <!-- KPI 3: Total Cost (This Month) -->
+        <div class="card kpi-card">
+          <div class="kpi-header">
+            <div class="kpi-icon-wrap amber">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+              </svg>
+            </div>
+            <span class="kpi-title" data-i18n="kpi_energy_cost">TOTAL COST (THIS MONTH)</span>
+          </div>
+          <div class="kpi-value-row">
+            <span class="kpi-number">342.50</span>
+            <span class="kpi-unit">EGP</span>
+          </div>
+          <div class="kpi-footer">
+            <span class="chip-pill amber" data-i18n="kpi_energy_cost_discount">-8.00 EGP discount ready</span>
+          </div>
+          <!-- 5 Vertical Mini Amber Bars -->
+          <div class="kpi-mini-bars">
+            <div class="mini-bar amber" style="height: 16px;"></div>
+            <div class="mini-bar amber" style="height: 24px;"></div>
+            <div class="mini-bar amber" style="height: 32px;"></div>
+            <div class="mini-bar amber" style="height: 38px;"></div>
+            <div class="mini-bar amber" style="height: 44px;"></div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ====================================================================
+           MIDDLE ROW: DAILY TREND CHART + ENERGY LOG TABLE
+           ==================================================================== -->
+      <section class="middle-grid">
+        
+        <!-- Daily Energy Trend Card -->
+        <div class="card">
+          <div class="card-header-row">
+            <div class="card-title-group">
+              <h2>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <span data-i18n="trend_chart_title">Daily Energy Trend (kWh)</span>
+              </h2>
+            </div>
+            <select class="select-dropdown" id="trendRangeSelect">
+              <option value="7" data-i18n="filter_past_7">Past 7 Days</option>
+              <option value="14" data-i18n="filter_past_14">Past 14 Days</option>
+              <option value="30" data-i18n="filter_past_30">Past 30 Days</option>
+            </select>
+          </div>
+
+          <!-- Trend Canvas -->
+          <div class="chart-canvas-container">
+            <canvas id="dailyTrendCanvas"></canvas>
+          </div>
+
+          <!-- Bottom 4 Stats Row inside Trend Card -->
+          <div class="trend-bottom-stats-bar">
+            
+            <div class="trend-stat-item">
+              <div class="trend-stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+              </div>
+              <div class="trend-stat-info">
+                <span class="trend-stat-val">18.6 kWh</span>
+                <span class="trend-stat-label" data-i18n="stat_daily_avg">Daily Average</span>
+              </div>
+            </div>
+
+            <div class="trend-stat-item">
+              <div class="trend-stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+              <div class="trend-stat-info">
+                <span class="trend-stat-val">21.4 kWh</span>
+                <span class="trend-stat-label"><span data-i18n="stat_highest_day">Highest Day</span> <strong style="color:var(--text-main);">Aug 29</strong></span>
+              </div>
+            </div>
+
+            <div class="trend-stat-item">
+              <div class="trend-stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="22" y1="12" x2="18" y2="12"></line>
+                  <line x1="6" y1="12" x2="2" y2="12"></line>
+                  <line x1="12" y1="6" x2="12" y2="2"></line>
+                  <line x1="12" y1="22" x2="12" y2="18"></line>
+                </svg>
+              </div>
+              <div class="trend-stat-info">
+                <span class="trend-stat-val">8.7 kWh</span>
+                <span class="trend-stat-label"><span data-i18n="stat_lowest_day">Lowest Day</span> <strong style="color:var(--text-main);">Sep 01</strong></span>
+              </div>
+            </div>
+
+            <div class="trend-stat-item">
+              <div class="trend-stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+                  <polyline points="17 18 23 18 23 12"></polyline>
+                </svg>
+              </div>
+              <div class="trend-stat-info">
+                <span class="trend-stat-val" style="color:var(--primary-green);">↓ 12%</span>
+                <span class="trend-stat-label" data-i18n="stat_vs_last_week">vs Last Week</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Energy Log Table Card -->
+        <div class="card">
+          <div class="card-header-row">
+            <div class="card-title-group">
+              <h2>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span data-i18n="energy_log_title">Energy Log</span>
+              </h2>
+            </div>
+            <button class="btn-view-all" data-i18n="view_all" onclick="showToast('Loading full energy logs...')">View All</button>
+          </div>
+
+          <div class="energy-table-wrap">
+            <table class="energy-log-table">
+              <thead>
+                <tr>
+                  <th data-i18n="th_date">Date</th>
+                  <th data-i18n="th_usage_kwh">Usage (kWh)</th>
+                  <th data-i18n="th_diff">Difference</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Sep 01, 2025</td>
+                  <td>11.90</td>
+                  <td><span class="diff-badge down">-0.59 ↓</span></td>
+                </tr>
+                <tr>
+                  <td>Aug 31, 2025</td>
+                  <td>12.49</td>
+                  <td><span class="diff-badge up">+1.21 ↑</span></td>
+                </tr>
+                <tr>
+                  <td>Aug 30, 2025</td>
+                  <td>14.30</td>
+                  <td><span class="diff-badge up">+0.95 ↑</span></td>
+                </tr>
+                <tr>
+                  <td>Aug 29, 2025</td>
+                  <td>21.40</td>
+                  <td><span class="diff-badge up">+4.80 ↑</span></td>
+                </tr>
+                <tr>
+                  <td>Aug 28, 2025</td>
+                  <td>16.60</td>
+                  <td><span class="diff-badge up">+1.40 ↑</span></td>
+                </tr>
+                <tr>
+                  <td>Aug 27, 2025</td>
+                  <td>15.20</td>
+                  <td><span class="diff-badge up">+0.80 ↑</span></td>
+                </tr>
+                <tr>
+                  <td>Aug 26, 2025</td>
+                  <td>14.40</td>
+                  <td><span style="color:var(--text-light);">-</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ====================================================================
+           LOWER ROW (3 CARDS: BREAKDOWN + TOP DEVICES + AI INSIGHT)
+           ==================================================================== -->
+      <section class="lower-3-grid">
+        
+        <!-- 1. Consumption Breakdown Donut -->
+        <div class="card">
+          <div class="card-header-row">
+            <h2 style="font-size: 15px; font-weight: 800;" data-i18n="breakdown_title">Consumption Breakdown</h2>
+            <select class="select-dropdown">
+              <option data-i18n="filter_this_month">This Month</option>
+              <option>Last Month</option>
+            </select>
+          </div>
+
+          <div class="donut-layout">
+            <div class="donut-chart-box">
+              <svg class="donut-svg" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="38" fill="none" stroke="var(--border-subtle)" stroke-width="14"></circle>
+                <!-- Air Conditioner (38%) -->
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#4d6d39" stroke-width="14" stroke-dasharray="90.73 238.76" stroke-dashoffset="0"></circle>
+                <!-- Refrigerator (22%) -->
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#799b61" stroke-width="14" stroke-dasharray="52.52 238.76" stroke-dashoffset="-90.73"></circle>
+                <!-- Lighting (16%) -->
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#d5b66d" stroke-width="14" stroke-dasharray="38.20 238.76" stroke-dashoffset="-143.25"></circle>
+                <!-- Water Heater (12%) -->
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#f3b41c" stroke-width="14" stroke-dasharray="28.65 238.76" stroke-dashoffset="-181.45"></circle>
+                <!-- Others (12%) -->
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#a0b19d" stroke-width="14" stroke-dasharray="28.65 238.76" stroke-dashoffset="-210.1"></circle>
+              </svg>
+              <div class="donut-center-info">
+                <span class="donut-center-val">215.4</span>
+                <span class="donut-center-unit">kWh</span>
+              </div>
+            </div>
+
+            <div class="breakdown-legend">
+              <div class="breakdown-row">
+                <div class="breakdown-label-group">
+                  <span class="breakdown-dot" style="background-color: #4d6d39;"></span>
+                  <span data-i18n="device_ac">Air Conditioner</span>
+                </div>
+                <span class="breakdown-pct">38%</span>
+              </div>
+
+              <div class="breakdown-row">
+                <div class="breakdown-label-group">
+                  <span class="breakdown-dot" style="background-color: #799b61;"></span>
+                  <span data-i18n="device_fridge">Refrigerator</span>
+                </div>
+                <span class="breakdown-pct">22%</span>
+              </div>
+
+              <div class="breakdown-row">
+                <div class="breakdown-label-group">
+                  <span class="breakdown-dot" style="background-color: #d5b66d;"></span>
+                  <span data-i18n="cat_lighting">Lighting</span>
+                </div>
+                <span class="breakdown-pct">16%</span>
+              </div>
+
+              <div class="breakdown-row">
+                <div class="breakdown-label-group">
+                  <span class="breakdown-dot" style="background-color: #f3b41c;"></span>
+                  <span data-i18n="device_heater">Water Heater</span>
+                </div>
+                <span class="breakdown-pct">12%</span>
+              </div>
+
+              <div class="breakdown-row">
+                <div class="breakdown-label-group">
+                  <span class="breakdown-dot" style="background-color: #a0b19d;"></span>
+                  <span data-i18n="cat_others">Others</span>
+                </div>
+                <span class="breakdown-pct">12%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Top Consuming Devices Progress Bars -->
+        <div class="card">
+          <div class="card-header-row">
+            <h2 style="font-size: 15px; font-weight: 800;" data-i18n="top_devices_title">Top Consuming Devices</h2>
+            <select class="select-dropdown">
+              <option data-i18n="filter_this_month">This Month</option>
+              <option>Last Month</option>
+            </select>
+          </div>
+
+          <div class="top-devices-list">
+            
+            <div class="device-progress-item">
+              <div class="device-icon-mini">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+              </div>
+              <span class="device-progress-name" data-i18n="device_ac">Air Conditioner</span>
+              <div class="device-progress-bar-wrap">
+                <div class="device-progress-bar-fill" style="width: 38%;"></div>
+              </div>
+              <span class="device-progress-pct">38%</span>
+            </div>
+
+            <div class="device-progress-item">
+              <div class="device-icon-mini">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+                  <line x1="4" y1="10" x2="20" y2="10"></line>
+                  <line x1="8" y1="6" x2="8" y2="8"></line>
+                  <line x1="8" y1="14" x2="8" y2="17"></line>
+                </svg>
+              </div>
+              <span class="device-progress-name" data-i18n="device_fridge">Refrigerator</span>
+              <div class="device-progress-bar-wrap">
+                <div class="device-progress-bar-fill" style="width: 22%;"></div>
+              </div>
+              <span class="device-progress-pct">22%</span>
+            </div>
+
+            <div class="device-progress-item">
+              <div class="device-icon-mini">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
+              <span class="device-progress-name" data-i18n="device_heater">Water Heater</span>
+              <div class="device-progress-bar-wrap">
+                <div class="device-progress-bar-fill" style="width: 16%;"></div>
+              </div>
+              <span class="device-progress-pct">16%</span>
+            </div>
+
+            <div class="device-progress-item">
+              <div class="device-icon-mini">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2"></path>
+                </svg>
+              </div>
+              <span class="device-progress-name" data-i18n="cat_lighting">Lighting</span>
+              <div class="device-progress-bar-wrap">
+                <div class="device-progress-bar-fill" style="width: 12%;"></div>
+              </div>
+              <span class="device-progress-pct">12%</span>
+            </div>
+
+            <div class="device-progress-item">
+              <div class="device-icon-mini">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-6"></path>
+                  <line x1="9" y1="2" x2="9" y2="7"></line>
+                  <line x1="15" y1="2" x2="15" y2="7"></line>
+                </svg>
+              </div>
+              <span class="device-progress-name" data-i18n="cat_others">Others</span>
+              <div class="device-progress-bar-wrap">
+                <div class="device-progress-bar-fill" style="width: 12%;"></div>
+              </div>
+              <span class="device-progress-pct">12%</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 3. AI Energy Insight -->
+        <div class="card">
+          <div class="card-header-row" style="margin-bottom: 4px;">
+            <h2 style="font-size: 15px; font-weight: 800;" data-i18n="ai_insight_header">AI Energy Insight</h2>
+          </div>
+
+          <div class="ai-insight-box">
+            <div class="ai-icon-large">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2a6 6 0 0 0-6 6c0 2.5 1.5 4.5 3 6v2h6v-2c1.5-1.5 3-3.5 3-6a6 6 0 0 0-6-6z"></path>
+                <line x1="9" y1="22" x2="15" y2="22"></line>
+                <path d="M12 8a2 2 0 0 1 2 2"></path>
+              </svg>
+            </div>
+
+            <p class="ai-insight-text" data-i18n="ai_insight_energy_desc">
+              You can save up to <strong>2.4 kWh</strong> daily by optimizing your kitchen usage between <strong>12:00 - 3:00 PM</strong>.
+            </p>
+
+            <a href="../assistant/index.html" class="ai-action-btn">
+              <span data-i18n="btn_ai_recom">View AI Recommendations</span>
+              <span>&rarr;</span>
+            </a>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-popup" id="appToast">
+    <span id="toastIcon">✓</span>
+    <span id="toastMsg">Action completed</span>
+  </div>
+
+  <!-- Project Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/api.js"></script>
+
+  <!-- Energy Controller -->
+  <script src="energy.js"></script>
+</body>
+</html>

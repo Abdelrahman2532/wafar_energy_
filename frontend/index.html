@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WAFAR — Smart Energy</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      try {
+        const session = await AuthAPI.getSession();
+        if (session) {
+          window.location.href = "pages/dashboard/index.html";
+        } else {
+          window.location.href = "pages/login/index.html";
+        }
+      } catch (e) {
+        window.location.href = "pages/login/index.html";
+      }
+    });
+  </script>
+</head>
+<body style="background:#131d11; color:#fff; display:flex; align-items:center; justify-content:center; height:100vh; font-family:sans-serif; margin:0;">
+  <p>Redirecting to WAFAR...</p>
+</body>
+</html>

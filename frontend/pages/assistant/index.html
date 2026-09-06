@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WAFAR - AI Assistant</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assistant.css">
+</head>
+
+<body>
+
+  <!-- Backdrop for mobile drawer -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <div class="app-layout">
+    
+    <!-- ========================================================================
+         SIDEBAR
+         ======================================================================== -->
+    <aside class="sidebar" id="appSidebar">
+      <!-- Brand Logo -->
+      <div class="sidebar-brand">
+        <a href="../dashboard/index.html" class="brand-logo-link">
+          <img src="../../assets/images/WAFAR-LOGO .png" alt="WAFAR Logo" class="brand-logo-img" onerror="this.src='../../assets/images/WAFAR-LOGO.jpeg'">
+        </a>
+        <span class="brand-tagline" data-i18n="tagline">Smart Energy. Better Tomorrow.</span>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="nav-menu">
+        <a href="../dashboard/index.html" class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+              <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+              <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+              <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+            </svg>
+          </span>
+          <span class="nav-label" data-i18n="nav_dashboard">Dashboard</span>
+        </a>
+
+        <a href="../devices/index.html" class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+            </svg>
+          </span>
+          <span class="nav-label" data-i18n="nav_apartment">Apartment & Lamp</span>
+          <span class="nav-badge badge-on" id="sidebarLampBadge">ON</span>
+        </a>
+
+        <a href="../energy/index.html" class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          </span>
+          <span class="nav-label" data-i18n="nav_energy">Energy</span>
+        </a>
+
+        <a href="../points/index.html" class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </span>
+          <span class="nav-label" data-i18n="nav_points">WAFAR Points</span>
+          <span class="nav-badge badge-points">80 pts</span>
+        </a>
+
+        <a href="../billing/index.html" class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <line x1="2" y1="10" x2="22" y2="10"></line>
+            </svg>
+          </span>
+          <span class="nav-label" data-i18n="nav_billing">Billing</span>
+        </a>
+
+        <a href="../assistant/index.html" class="nav-item active">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </span>
+          <span class="nav-label" data-i18n="nav_assistant">AI Assistant</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar User Profile -->
+      <div class="sidebar-user">
+        <div class="user-avatar">AM</div>
+        <div class="user-info">
+          <div class="user-name" data-i18n="user_name">Abdalla M.</div>
+          <div class="user-apt" data-i18n="user_location">Apartment #4</div>
+        </div>
+        <a href="#" class="user-menu-btn" title="Sign Out" onclick="AuthAPI.signOut(); return false;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <!-- ========================================================================
+         MAIN CONTENT WRAPPER
+         ======================================================================== -->
+    <main class="main-wrapper">
+      
+      <!-- Top Breadcrumb & Top Header -->
+      <header class="top-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button class="mobile-menu-btn" id="mobileToggleBtn" aria-label="Toggle Sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+
+          <div class="breadcrumb-bar" style="margin-bottom: 0;">
+            <a href="../dashboard/index.html">WAFAR</a>
+            <span>/</span>
+            <span class="breadcrumb-current" data-i18n="assistant_page_title">AI Assistant</span>
+          </div>
+        </div>
+
+        <!-- Header Controls -->
+        <div class="header-actions">
+          <!-- Live Date & Time -->
+          <div class="header-pill-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span id="headerLiveTime">Wed, Sep 2, 01:06 AM</span>
+          </div>
+
+          <!-- Language Switcher -->
+          <div class="dropdown-container">
+            <button class="header-pill-btn" id="langSwitchBtn" onclick="i18n.toggleLanguage()">
+              <span id="currentLangLabel">عربي</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Theme Toggle -->
+          <button class="header-icon-btn" id="themeToggleBtn" title="Toggle Theme" onclick="toggleAppTheme()">
+            <svg id="themeIconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+
+          <!-- Clear Thread Button -->
+          <button class="btn-clear-thread" onclick="clearChatHistory()">
+            <span data-i18n="btn_clear">Clear Thread</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- ====================================================================
+           TOP HERO CARD: AI OVERVIEW & 3 METRIC CARDS
+           ==================================================================== -->
+      <section class="card ai-hero-card">
+        
+        <!-- Left: AI Identity & Features -->
+        <div class="ai-identity-section">
+          <div class="ai-large-avatar-wrap">
+            <img src="../../assets/images/wafar-ai-avatar.png" alt="WAFAR AI Assistant Avatar" class="ai-large-avatar-img" onerror="this.src='../../assets/images/WAFAR-LOGO .png'">
+          </div>
+
+          <div class="ai-identity-text">
+            <span class="ai-status-pill" data-i18n="ai_online">Online</span>
+            <h2 data-i18n="ai_hero_title">WAFAR AI Assistant</h2>
+            <p data-i18n="ai_hero_sub">Powered by WAFAR AI to help you manage and save energy smarter.</p>
+
+            <!-- 4 Badges Row -->
+            <div class="ai-feature-badges-row">
+              <div class="ai-feature-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <strong>24/7</strong> <span data-i18n="badge_247_support">AI Support</span>
+              </div>
+
+              <div class="ai-feature-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.5 2 2 6.5 2 12c0 3.5 1.8 6.6 4.6 8.4C6.2 19 6 17.5 6 16c0-4.4 3.6-8 8-8 1.5 0 3 .2 4.4.6C16.6 3.8 13.5 2 12 2z"/></svg>
+                <strong>95%</strong> <span data-i18n="badge_95_accuracy">Accuracy</span>
+              </div>
+
+              <div class="ai-feature-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <strong>Secure</strong> <span data-i18n="badge_secure_data">Your Data</span>
+              </div>
+
+              <div class="ai-feature-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-7 7c0 2.5 1.3 4.7 3.2 6h7.6c1.9-1.3 3.2-3.5 3.2-6a7 7 0 0 0-7-7z"></path></svg>
+                <strong>Smart</strong> <span data-i18n="badge_smart_sugg">Suggestions</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: 3 Metric Mini Cards -->
+        <div class="ai-metrics-grid">
+          
+          <!-- Card 1: Energy Saved -->
+          <div class="metric-mini-card">
+            <div class="metric-header">
+              <div class="metric-icon-small">
+                <img src="../../assets/images/wafar-ai-avatar.png" alt="Icon" onerror="this.style.display='none'">
+              </div>
+              <span data-i18n="metric_energy_saved">Energy Saved</span>
+            </div>
+            <div class="metric-big-val">18%</div>
+            <span class="metric-subtext" data-i18n="sub_vs_last_month">vs last month</span>
+            
+            <div class="metric-visual-container">
+              <svg class="sparkline-svg" viewBox="0 0 100 35" fill="none">
+                <defs>
+                  <linearGradient id="splineGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#4d6d39" stop-opacity="0.35"/>
+                    <stop offset="100%" stop-color="#4d6d39" stop-opacity="0.0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M 0,28 Q 20,26 35,16 T 65,18 T 100,6 L 100,35 L 0,35 Z" fill="url(#splineGrad)"/>
+                <path d="M 0,28 Q 20,26 35,16 T 65,18 T 100,6" stroke="#4d6d39" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Card 2: Efficiency Score -->
+          <div class="metric-mini-card">
+            <div class="metric-header">
+              <div class="metric-icon-small">
+                <img src="../../assets/images/wafar-ai-avatar.png" alt="Icon" onerror="this.style.display='none'">
+              </div>
+              <span data-i18n="metric_efficiency_score">Efficiency Score</span>
+            </div>
+            <div class="metric-big-val">92</div>
+            <span class="metric-subtext" data-i18n="sub_excellent">Excellent</span>
+            
+            <div class="metric-visual-container">
+              <svg class="gauge-svg" viewBox="0 0 80 44">
+                <!-- Background Arc -->
+                <path d="M 10,40 A 30,30 0 0,1 70,40" fill="none" stroke="var(--border-color)" stroke-width="7" stroke-linecap="round"/>
+                <!-- Filled 92% Green Arc -->
+                <path d="M 10,40 A 30,30 0 0,1 66,22" fill="none" stroke="#4d6d39" stroke-width="7" stroke-linecap="round"/>
+                <!-- Center Needle / Point -->
+                <circle cx="40" cy="40" r="3.5" fill="#182216"/>
+                <line x1="40" y1="40" x2="56" y2="28" stroke="#182216" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Card 3: WAFAR Points -->
+          <div class="metric-mini-card">
+            <div class="metric-header">
+              <div class="metric-icon-small">
+                <img src="../../assets/images/wafar-ai-avatar.png" alt="Icon" onerror="this.style.display='none'">
+              </div>
+              <span data-i18n="metric_wafar_points">WAFAR Points</span>
+            </div>
+            <div class="metric-big-val">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#f3b41c" stroke="#966b0a" stroke-width="1.5">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              <span>80 <span style="font-size: 15px; font-weight: 700;">pts</span></span>
+            </div>
+            <span class="metric-subtext" data-i18n="sub_available">Available</span>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ====================================================================
+           BOTTOM CARD: INTERACTIVE CHAT COPILOT
+           ==================================================================== -->
+      <section class="card chat-card">
+        
+        <!-- Chat Header Bar -->
+        <div class="chat-header-bar">
+          <div class="chat-header-identity">
+            <div class="chat-avatar-mini">
+              <img src="../../assets/images/wafar-ai-avatar.png" alt="AI Avatar" onerror="this.src='../../assets/images/WAFAR-LOGO .png'">
+            </div>
+            <div class="chat-title-group">
+              <div class="chat-title-row">
+                <h3 data-i18n="ai_hero_title">WAFAR AI Assistant</h3>
+                <span class="chat-header-status" data-i18n="ai_online">Online</span>
+              </div>
+              <span class="chat-header-desc" data-i18n="chat_header_sub">Always here to help you save energy.</span>
+            </div>
+          </div>
+
+          <div class="badge-copilot-pill">
+            <img src="../../assets/images/wafar-ai-avatar.png" alt="Copilot" onerror="this.style.display='none'">
+            <span data-i18n="badge_ai_copilot">WAFAR AI Copilot</span>
+          </div>
+        </div>
+
+        <!-- Conversation Scrollable Viewport -->
+        <div class="chat-conversation-viewport" id="chatViewport">
+          
+          <!-- Background Watermark -->
+          <img src="../../assets/images/wafar-ai-avatar.png" alt="Watermark" class="chat-watermark">
+
+          <!-- Initial Greeting Message Bubble from AI -->
+          <div class="chat-message-row ai" id="welcomeMsgBubble">
+            <div class="msg-avatar">
+              <img src="../../assets/images/wafar-ai-avatar.png" alt="AI Avatar" onerror="this.src='../../assets/images/WAFAR-LOGO .png'">
+            </div>
+            <div class="msg-bubble-wrap">
+              <div class="msg-bubble-card">
+                <strong data-i18n="chat_welcome_hello">Hello Abdalla!</strong><br>
+                <span data-i18n="chat_welcome_intro">I am your <strong>WAFAR AI Energy Assistant</strong>.</span><br>
+                <span data-i18n="chat_welcome_ask">Ask me anything about your power usage, saving tips, or your smart lamp.</span>
+              </div>
+              <span class="msg-time-stamp" data-i18n="chat_just_now">Just now</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Suggested Prompts Row -->
+        <div class="suggested-prompts-bar">
+          <span class="suggested-label" data-i18n="label_suggested_for_you">Suggested for you</span>
+
+          <button class="prompt-chip-btn" onclick="sendPrompt('How can I save more energy?')">
+            <img src="../../assets/images/wafar-ai-avatar.png" alt="Icon" onerror="this.style.display='none'">
+            <span data-i18n="prompt_save_energy">How can I save more energy?</span>
+          </button>
+
+          <button class="prompt-chip-btn" onclick="sendPrompt('What is my daily average usage?')">
+            <img src="../../assets/images/wafar-ai-avatar.png" alt="Icon" onerror="this.style.display='none'">
+            <span data-i18n="prompt_daily_avg">What is my daily average usage?</span>
+          </button>
+
+          <button class="prompt-chip-btn" onclick="sendPrompt('Best time to use appliances?')">
+            <img src="../../assets/images/wafar-ai-avatar.png" alt="Icon" onerror="this.style.display='none'">
+            <span data-i18n="prompt_best_time">Best time to use appliances?</span>
+          </button>
+
+          <button class="prompt-chip-btn" onclick="sendPrompt('More suggestions')">
+            <img src="../../assets/images/wafar-ai-avatar.png" alt="Icon" onerror="this.style.display='none'">
+            <span data-i18n="prompt_more_suggestions">More suggestions</span>
+          </button>
+        </div>
+
+        <!-- Chat Input Bar -->
+        <form class="chat-input-container" id="chatForm" onsubmit="handleChatSubmit(event)">
+          <div class="input-pill-wrapper">
+            <div class="input-avatar-icon">
+              <img src="../../assets/images/wafar-ai-avatar.png" alt="AI Icon" onerror="this.style.display='none'">
+            </div>
+            <input 
+              type="text" 
+              class="chat-text-input" 
+              id="chatInput" 
+              placeholder="Type your message..." 
+              data-i18n-placeholder="input_placeholder"
+              autocomplete="off"
+            >
+          </div>
+
+          <button type="submit" class="btn-send-message">
+            <div class="input-avatar-icon" style="width: 16px; height: 16px;">
+              <img src="../../assets/images/wafar-ai-avatar.png" alt="AI Icon" onerror="this.style.display='none'">
+            </div>
+            <span data-i18n="btn_send">Send</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </form>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-popup" id="appToast">
+    <span id="toastIcon">✓</span>
+    <span id="toastMsg">Action completed</span>
+  </div>
+
+  <!-- Project Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/api.js"></script>
+
+  <!-- AI Assistant Controller -->
+  <script src="assistant.js"></script>
+</body>
+</html>

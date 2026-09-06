@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WAFAR - Apartment Layout</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="devices.css">
+</head>
+
+<body>
+
+  <!-- Backdrop for mobile drawer -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <div class="app-layout">
+    
+    <!-- ========================================================================
+         SIDEBAR
+         ======================================================================== -->
+    <aside class="sidebar" id="appSidebar">
+      <!-- Brand Logo -->
+      <div class="sidebar-brand">
+        <a href="../dashboard/index.html" class="brand-logo-link">
+          <img src="../../assets/images/WAFAR-LOGO .png" alt="WAFAR Logo" class="brand-logo-img" onerror="this.src='../../assets/images/WAFAR-LOGO.jpeg'">
+        </a>
+        <span class="brand-tagline" data-i18n="tagline">Smart Energy. Better Tomorrow.</span>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="nav-menu">
+        <a href="../dashboard/index.html" class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+              <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+              <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+              <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+            </svg>
+          </span>
+          <span class="nav-label" data-i18n="nav_dashboard">Dashboard</span>
+        </a>
+
+        <a href="../devices/index.html" class="nav-item active">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+            </svg>
+          </span>
+          <span class="nav-label" data-i18n="nav_apartment">Apartment & Lamp</span>
+          <span class="nav-badge badge-on" id="sidebarLampBadge">ON</span>
+        </a>
+
+        <a href="../energy/index.html" class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          </span>
+          <span class="nav-label" data-i18n="nav_energy">Energy</span>
+        </a>
+
+        <a href="../points/index.html" class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </span>
+          <span class="nav-label" data-i18n="nav_points">WAFAR Points</span>
+          <span class="nav-badge badge-points">80 pts</span>
+        </a>
+
+        <a href="../billing/index.html" class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <line x1="2" y1="10" x2="22" y2="10"></line>
+            </svg>
+          </span>
+          <span class="nav-label" data-i18n="nav_billing">Billing</span>
+        </a>
+
+        <a href="../assistant/index.html" class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </span>
+          <span class="nav-label" data-i18n="nav_assistant">AI Assistant</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar User Profile -->
+      <div class="sidebar-user">
+        <div class="user-avatar">AM</div>
+        <div class="user-info">
+          <div class="user-name" data-i18n="user_name">Abdalla M.</div>
+          <div class="user-apt" data-i18n="user_location">Apartment #4</div>
+        </div>
+        <a href="#" class="user-menu-btn" title="Sign Out" onclick="AuthAPI.signOut(); return false;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </a>
+      </div>
+
+      <!-- "This Month Savings" Box -->
+      <div class="saving-card">
+        <div class="saving-header">
+          <div class="saving-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+          </div>
+          <div class="saving-title-group">
+            <div class="saving-title" data-i18n="saving_month_title">This Month Savings</div>
+            <div class="saving-val-large">23.4 <span class="saving-val-unit">kWh</span></div>
+          </div>
+        </div>
+        <div class="saving-progress-wrap">
+          <div class="saving-progress-bar">
+            <div class="saving-progress-fill" style="width: 78%;"></div>
+          </div>
+          <span class="saving-progress-text">78%</span>
+        </div>
+        <a href="../energy/index.html" class="saving-details-link">
+          <span data-i18n="view_energy_details">View Energy Details</span> &rarr;
+        </a>
+      </div>
+
+      <!-- Sidebar Architectural Visual -->
+      <div class="sidebar-bottom-visual">
+        <img src="../../assets/images/sidebar-villa.png" alt="Smart Villa Architecture" onerror="this.src='../../assets/images/house.png'">
+      </div>
+    </aside>
+
+    <!-- ========================================================================
+         MAIN CONTENT WRAPPER
+         ======================================================================== -->
+    <main class="main-wrapper">
+      
+      <!-- Breadcrumb Bar -->
+      <div class="breadcrumb-bar">
+        <a href="../devices/index.html" data-i18n="nav_apartment">Apartment & Lamp</a>
+        <span>/</span>
+        <span class="breadcrumb-current" data-i18n="apartment_layout_title">Apartment Layout</span>
+      </div>
+
+      <!-- Top Header -->
+      <header class="top-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button class="mobile-menu-btn" id="mobileToggleBtn" aria-label="Toggle Sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          
+          <div class="welcome-group">
+            <h1>
+              <span data-i18n="apartment_layout_title">Apartment Layout</span>
+              <span class="welcome-leaf">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.5 2 2 6.5 2 12c0 3.5 1.8 6.6 4.6 8.4C6.2 19 6 17.5 6 16c0-4.4 3.6-8 8-8 1.5 0 3 .2 4.4.6C16.6 3.8 13.5 2 12 2z"/>
+                </svg>
+              </span>
+            </h1>
+            <p id="pageSubTitle" data-i18n="apartment_layout_sub_3d">Interactive 3D view of your apartment and connected smart devices.</p>
+          </div>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <!-- Live Date & Time -->
+          <div class="header-pill-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span id="headerLiveTime">Tue, Sep 01, 06:51 PM</span>
+          </div>
+
+          <!-- Language Switcher -->
+          <div class="dropdown-container">
+            <button class="header-pill-btn" id="langSwitchBtn" onclick="i18n.toggleLanguage()">
+              <span id="currentLangLabel">عربي</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Theme Toggle -->
+          <button class="header-icon-btn" id="themeToggleBtn" title="Toggle Theme">
+            <svg id="themeIconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+
+          <!-- Notification Bell -->
+          <div class="dropdown-container">
+            <button class="header-icon-btn" id="notifBellBtn" title="Notifications">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span class="notification-badge">3</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Sub-Action Bar over Floor Plan -->
+      <div class="floorplan-action-bar">
+        <div class="apartment-title-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          <span data-i18n="apartment_info_header">Apartment #4 (2 Rooms + Reception)</span>
+        </div>
+
+        <div class="top-pill-actions">
+          <span class="action-chip-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-6"></path><line x1="9" y1="2" x2="9" y2="7"></line><line x1="15" y1="2" x2="15" y2="7"></line></svg>
+            <span id="topConnectedBadge">4 Connected Devices</span>
+          </span>
+          <span class="action-chip-pill amber">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            <span id="topActiveBadge">1 Active Device</span>
+          </span>
+          <button class="action-chip-pill btn-edit" onclick="showToast('Edit Layout Mode Enabled')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            <span data-i18n="edit_layout_btn">Edit Layout</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           MAIN 2-COLUMN APARTMENT GRID (LEFT: FLOOR PLAN / RIGHT: SMART DEVICES)
+           ==================================================================== -->
+      <div class="apartment-main-grid">
+        
+        <!-- LEFT: FLOOR PLAN CARD (2D / 3D INTERACTIVE) -->
+        <div class="card floorplan-card" id="floorPlanContainer">
+          
+          <!-- Top Floating View Mode Toggle -->
+          <div class="floorplan-top-controls">
+            <div class="view-mode-toggle-group">
+              <button class="view-mode-btn" id="btn2DView" onclick="setViewMode('2D')" data-i18n="view_2d">2D View</button>
+              <button class="view-mode-btn active" id="btn3DView" onclick="setViewMode('3D')" data-i18n="view_3d">3D View</button>
+            </div>
+
+            <button class="cube-3d-btn" id="cubeBtn" title="Isometric 3D Projection" onclick="resetPlanTransform()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Floating Left Controls (Rotate, Zoom In, Zoom Out, Reset) -->
+          <div class="floorplan-floating-left-controls">
+            <button class="control-icon-btn" id="rotateBtn" onclick="rotatePlan()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+              </svg>
+              <span data-i18n="controls_rotate">Rotate</span>
+            </button>
+
+            <button class="control-icon-btn" onclick="zoomPlan(0.15)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                <line x1="11" y1="8" x2="11" y2="14"></line>
+                <line x1="8" y1="11" x2="14" y2="11"></line>
+              </svg>
+              <span data-i18n="controls_zoom_in">Zoom In</span>
+            </button>
+
+            <button class="control-icon-btn" onclick="zoomPlan(-0.15)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                <line x1="8" y1="11" x2="14" y2="11"></line>
+              </svg>
+              <span data-i18n="controls_zoom_out">Zoom Out</span>
+            </button>
+
+            <button class="control-icon-btn" onclick="resetPlanTransform()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+              </svg>
+              <span data-i18n="controls_reset">Reset</span>
+            </button>
+          </div>
+
+          <!-- Floor Plan Image & Interactive Room Tags Viewport -->
+          <div class="floorplan-viewport" id="viewportArea">
+            <div class="floorplan-img-wrapper" id="planImgWrapper">
+              
+              <!-- The Image Element (Switches between 3D and 2D) -->
+              <img src="../../assets/images/apartment-3d.png" alt="Apartment 3D Layout" class="floorplan-render-img" id="floorPlanImg" onerror="this.src='../../assets/images/apartment-2d.png'">
+
+              <!-- Interactive Room Badges Container -->
+              <div id="roomBadgesContainer">
+                
+                <!-- 1. Bedroom -->
+                <div class="room-badge-tag tag-bedroom-3d" id="tagBedroom" onclick="toggleDevice(1)">
+                  <div class="room-badge-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-7 7c0 2.5 1.3 4.7 3.2 6h7.6c1.9-1.3 3.2-3.5 3.2-6a7 7 0 0 0-7-7z"></path></svg>
+                  </div>
+                  <div class="room-badge-content">
+                    <span class="room-badge-title" data-i18n="room_bedroom">Bedroom</span>
+                    <span class="room-badge-meta" id="tagMetaBedroom">1 Device • OFF</span>
+                  </div>
+                </div>
+
+                <!-- 2. Kitchen -->
+                <div class="room-badge-tag is-off tag-kitchen-3d" id="tagKitchen" onclick="toggleDevice(2)">
+                  <div class="room-badge-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-7 7c0 2.5 1.3 4.7 3.2 6h7.6c1.9-1.3 3.2-3.5 3.2-6a7 7 0 0 0-7-7z"></path></svg>
+                  </div>
+                  <div class="room-badge-content">
+                    <span class="room-badge-title" data-i18n="room_kitchen">Kitchen</span>
+                    <span class="room-badge-meta" id="tagMetaKitchen">1 Device • OFF</span>
+                  </div>
+                </div>
+
+                <!-- 3. Living Room -->
+                <div class="room-badge-tag is-off tag-living-3d" id="tagLiving" onclick="toggleDevice(4)">
+                  <div class="room-badge-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-7 7c0 2.5 1.3 4.7 3.2 6h7.6c1.9-1.3 3.2-3.5 3.2-6a7 7 0 0 0-7-7z"></path></svg>
+                  </div>
+                  <div class="room-badge-content">
+                    <span class="room-badge-title" data-i18n="room_living">Living Room</span>
+                    <span class="room-badge-meta" id="tagMetaLiving">1 Device • OFF</span>
+                  </div>
+                </div>
+
+                <!-- 4. Reception -->
+                <div class="room-badge-tag is-off tag-reception-3d" id="tagReception" onclick="toggleDevice(3)">
+                  <div class="room-badge-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-7 7c0 2.5 1.3 4.7 3.2 6h7.6c1.9-1.3 3.2-3.5 3.2-6a7 7 0 0 0-7-7z"></path></svg>
+                  </div>
+                  <div class="room-badge-content">
+                    <span class="room-badge-title" data-i18n="room_reception">Reception</span>
+                    <span class="room-badge-meta" id="tagMetaReception">1 Device • OFF</span>
+                  </div>
+                </div>
+
+                <!-- Entrance Green Arrow -->
+                <div class="entrance-arrow entrance-arrow-3d" id="entranceArrow" title="Main Entrance"></div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Bottom Right Day/Night Mode Switcher (For 3D View) -->
+          <div class="day-night-toggle" id="dayNightToggleBar">
+            <button class="day-night-btn active" id="btnDayMode" onclick="setLightingMode('day')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line></svg>
+              <span data-i18n="time_day">Day</span>
+            </button>
+            <button class="day-night-btn" id="btnNightMode" onclick="setLightingMode('night')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+              <span data-i18n="time_night">Night</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: SMART DEVICES & APARTMENT OVERVIEW -->
+        <div class="right-devices-column">
+          
+          <!-- Smart Devices 4-Cards Section -->
+          <div class="card">
+            <div class="card-header-row">
+              <div class="card-title-group">
+                <h2>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                  </svg>
+                  <span data-i18n="smart_devices_title">Smart Devices</span>
+                </h2>
+              </div>
+
+              <select class="select-dropdown" id="devicesFilterSelect" onchange="filterDevices(this.value)">
+                <option value="all" data-i18n="filter_all_devices">All Devices</option>
+                <option value="active" data-i18n="filter_active_only">Active Only</option>
+                <option value="off" data-i18n="filter_off_only">Off Only</option>
+              </select>
+            </div>
+
+            <div class="smart-devices-grid">
+              
+              <!-- 1. Bedroom Light (id: 1) -->
+              <div class="device-tile is-off" id="tileLight1">
+                <div class="device-tile-top">
+                  <div class="device-icon-circle">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-7 7c0 2.5 1.3 4.7 3.2 6h7.6c1.9-1.3 3.2-3.5 3.2-6a7 7 0 0 0-7-7z"></path></svg>
+                  </div>
+                  <div class="device-tile-info">
+                    <div class="device-tile-name" id="nameLight1">Bedroom Light</div>
+                    <div class="device-tile-meta" id="metaLight1">15 W • 192.168.1.100</div>
+                    <span class="device-tile-badge" id="badgeLight1">OFF</span>
+                  </div>
+                </div>
+                <div class="device-tile-bottom">
+                  <span class="device-running-time" id="timeLight1"><span data-i18n="status_running">Running</span>: 2h 34m</span>
+                  <label class="switch-toggle">
+                    <input type="checkbox" id="switchLight1" onchange="handleDeviceSwitch(1, this.checked)">
+                    <span class="slider-toggle"></span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 2. Kitchen Light (id: 2) -->
+              <div class="device-tile is-off" id="tileLight2">
+                <div class="device-tile-top">
+                  <div class="device-icon-circle">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-7 7c0 2.5 1.3 4.7 3.2 6h7.6c1.9-1.3 3.2-3.5 3.2-6a7 7 0 0 0-7-7z"></path></svg>
+                  </div>
+                  <div class="device-tile-info">
+                    <div class="device-tile-name" id="nameLight2">Kitchen Light</div>
+                    <div class="device-tile-meta" id="metaLight2">12 W • 192.168.1.101</div>
+                    <span class="device-tile-badge" id="badgeLight2">OFF</span>
+                  </div>
+                </div>
+                <div class="device-tile-bottom">
+                  <span class="device-running-time" id="timeLight2"><span data-i18n="status_last_seen">Last seen</span>: 2h ago</span>
+                  <label class="switch-toggle">
+                    <input type="checkbox" id="switchLight2" onchange="handleDeviceSwitch(2, this.checked)">
+                    <span class="slider-toggle"></span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 3. Reception Light (id: 3) -->
+              <div class="device-tile is-off" id="tileLight3">
+                <div class="device-tile-top">
+                  <div class="device-icon-circle">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-7 7c0 2.5 1.3 4.7 3.2 6h7.6c1.9-1.3 3.2-3.5 3.2-6a7 7 0 0 0-7-7z"></path></svg>
+                  </div>
+                  <div class="device-tile-info">
+                    <div class="device-tile-name" id="nameLight3">Reception Light</div>
+                    <div class="device-tile-meta" id="metaLight3">20 W • 192.168.1.102</div>
+                    <span class="device-tile-badge" id="badgeLight3">OFF</span>
+                  </div>
+                </div>
+                <div class="device-tile-bottom">
+                  <span class="device-running-time" id="timeLight3"><span data-i18n="status_running">Running</span>: 1h 12m</span>
+                  <label class="switch-toggle">
+                    <input type="checkbox" id="switchLight3" onchange="handleDeviceSwitch(3, this.checked)">
+                    <span class="slider-toggle"></span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 4. Living Room Light (id: 4) -->
+              <div class="device-tile is-off" id="tileLight4">
+                <div class="device-tile-top">
+                  <div class="device-icon-circle">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-7 7c0 2.5 1.3 4.7 3.2 6h7.6c1.9-1.3 3.2-3.5 3.2-6a7 7 0 0 0-7-7z"></path></svg>
+                  </div>
+                  <div class="device-tile-info">
+                    <div class="device-tile-name" id="nameLight4">Living Room Light</div>
+                    <div class="device-tile-meta" id="metaLight4">15 W • 192.168.1.103</div>
+                    <span class="device-tile-badge" id="badgeLight4">OFF</span>
+                  </div>
+                </div>
+                <div class="device-tile-bottom">
+                  <span class="device-running-time" id="timeLight4"><span data-i18n="status_running">Running</span>: 45m</span>
+                  <label class="switch-toggle">
+                    <input type="checkbox" id="switchLight4" onchange="handleDeviceSwitch(4, this.checked)">
+                    <span class="slider-toggle"></span>
+                  </label>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Apartment Overview Stats Card -->
+          <div class="card">
+            <div class="card-header-row" style="margin-bottom: 10px;">
+              <div class="card-title-group">
+                <h2>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                  </svg>
+                  <span data-i18n="apartment_overview_title">Apartment Overview</span>
+                </h2>
+              </div>
+            </div>
+
+            <div class="overview-stats-grid">
+              
+              <!-- Stat 1 -->
+              <div class="overview-stat-col">
+                <div class="overview-icon-wrap">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                  </svg>
+                </div>
+                <div class="overview-stat-data">
+                  <div class="overview-stat-val" id="overviewConnectedCount">4</div>
+                  <div class="overview-stat-label" data-i18n="stat_connected">Connected</div>
+                </div>
+              </div>
+
+              <!-- Stat 2 -->
+              <div class="overview-stat-col">
+                <div class="overview-icon-wrap amber">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                </div>
+                <div class="overview-stat-data">
+                  <div class="overview-stat-val" id="overviewActiveCount">2</div>
+                  <div class="overview-stat-label" data-i18n="stat_active">Active</div>
+                </div>
+              </div>
+
+              <!-- Stat 3 -->
+              <div class="overview-stat-col">
+                <div class="overview-icon-wrap">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                  </svg>
+                </div>
+                <div class="overview-stat-data">
+                  <div class="overview-stat-val" id="overviewTotalPower">57 <span class="overview-stat-unit">W</span></div>
+                  <div class="overview-stat-label" data-i18n="stat_total_power">Total Power</div>
+                </div>
+              </div>
+
+              <!-- Stat 4 -->
+              <div class="overview-stat-col">
+                <div class="overview-icon-wrap">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 20V10M12 20V4M6 20v-6"></path>
+                  </svg>
+                </div>
+                <div class="overview-stat-data">
+                  <div class="overview-stat-val">3.8 <span class="overview-stat-unit">kWh</span></div>
+                  <div class="overview-stat-label" data-i18n="stat_today_usage">Today's Usage</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Bottom Hint & Network Status Bar -->
+      <div class="bottom-hint-bar">
+        <div class="hint-left">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <span id="bottomHintText" data-i18n="bottom_hint_3d">Drag to rotate • Scroll to zoom • Click on a room or device to view more details and control options.</span>
+        </div>
+
+        <div class="network-status-tag">
+          <span data-i18n="esp_network_status">ESP32 Network: Online</span>
+          <span class="network-dot-active"></span>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-popup" id="appToast">
+    <span id="toastIcon">✓</span>
+    <span id="toastMsg">Action completed</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/api.js"></script>
+
+  <!-- Devices Controller -->
+  <script src="devices.js"></script>
+</body>
+</html>

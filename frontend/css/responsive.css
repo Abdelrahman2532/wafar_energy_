@@ -1,0 +1,156 @@
+/* ==========================================================================
+   WAFAR RESPONSIVE SYSTEM (Fresh Theme & Floor Plan Layouts)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Large Laptops & Desktops (max-width: 1200px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1200px) {
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-main-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .energy-analytics-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .points-overview-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .billing-main-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. Tablets & Small Laptops (max-width: 992px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 992px) {
+  :root {
+    --sidebar-width: 0px;
+  }
+
+  .app-sidebar {
+    transform: translateX(-100%);
+    width: 270px;
+    box-shadow: var(--shadow-lg);
+  }
+
+  [dir="rtl"] .app-sidebar {
+    transform: translateX(100%);
+  }
+
+  .app-sidebar.mobile-open {
+    transform: translateX(0) !important;
+  }
+
+  .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(18, 21, 18, 0.5);
+    backdrop-filter: blur(2px);
+    z-index: 99;
+  }
+
+  .sidebar-backdrop.active {
+    display: block;
+  }
+
+  .app-main {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  .page-content {
+    padding: 20px 16px;
+  }
+
+  .app-header {
+    padding: 0 16px;
+  }
+
+  .apartment-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. Mobile Devices (max-width: 768px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .page-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .page-title-group h1 {
+    font-size: 1.35rem;
+  }
+
+  .header-time-pill {
+    display: none;
+  }
+
+  .card-header {
+    padding: 14px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .card-body {
+    padding: 16px;
+  }
+
+  .payment-methods-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .assistant-shell {
+    height: calc(100vh - var(--header-height) - 30px);
+    border-radius: var(--radius-md);
+  }
+
+  .message-bubble-row {
+    max-width: 92%;
+  }
+
+  .suggested-prompts-bar {
+    padding: 8px 12px;
+  }
+
+  .chat-input-area {
+    padding: 10px 12px;
+  }
+
+  .toast {
+    min-width: calc(100vw - 32px);
+    right: 16px;
+    bottom: 16px;
+  }
+
+  [dir="rtl"] .toast {
+    left: 16px;
+    right: auto;
+  }
+}
