@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WAFAR — Loading</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Loading Screen Styles -->
+  <link rel="stylesheet" href="loading.css">
+</head>
+
+<body>
+
+  <!-- ====================================================================
+       DECORATIVE BACKGROUND ELEMENTS
+       ==================================================================== -->
+
+  <!-- Top-left arc -->
+  <div class="deco-arc-tl"></div>
+
+  <!-- Bottom-right arc -->
+  <div class="deco-arc-br"></div>
+
+  <!-- Green dots -->
+  <div class="deco-dot deco-dot-1"></div>
+  <div class="deco-dot deco-dot-2"></div>
+
+  <!-- Soft leaf shadow blobs -->
+  <div class="deco-leaf deco-leaf-1"></div>
+  <div class="deco-leaf deco-leaf-2"></div>
+  <div class="deco-leaf deco-leaf-3"></div>
+  <div class="deco-leaf deco-leaf-4"></div>
+
+
+  <!-- ====================================================================
+       TOP-RIGHT BADGE: "CLEAN ENERGY / BETTER TOMORROW"
+       ==================================================================== -->
+  <div class="badge-top-right">
+    <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+      <path d="M9 12l2 2 4-4"></path>
+    </svg>
+    <div class="badge-text">
+      Clean Energy<br>Better Tomorrow
+    </div>
+  </div>
+
+
+  <!-- ====================================================================
+       BOTTOM-LEFT ICONS: ⚡ | 🏠 | 🍃
+       ==================================================================== -->
+  <div class="icons-bottom-left">
+    <!-- Lightning bolt -->
+    <div class="bl-icon-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+      </svg>
+    </div>
+
+    <div class="bl-separator"></div>
+
+    <!-- Home -->
+    <div class="bl-icon-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+    </div>
+
+    <div class="bl-separator"></div>
+
+    <!-- Leaf -->
+    <div class="bl-icon-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+      </svg>
+    </div>
+  </div>
+
+
+  <!-- ====================================================================
+       CENTER CONTENT: LOGO + WELCOME + PROGRESS BAR
+       ==================================================================== -->
+  <div class="loading-center">
+
+    <!-- WAFAR Logo with Lightning Bolt -->
+    <div class="wafar-logo-group">
+      <div class="wafar-logo-text">
+        W<span>A</span>F<span>A</span>
+        <span class="letter-r-wrap">
+          R
+          <!-- Lightning Bolt overlapping the R -->
+          <svg class="lightning-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <!-- Welcome Text -->
+    <div class="welcome-text">
+      <h1>Welcome to <strong>WAFAR</strong></h1>
+    </div>
+
+    <!-- Subtitle -->
+    <p class="subtitle-text">Preparing your energy dashboard...</p>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+  </div>
+
+
+  <!-- ====================================================================
+       SCRIPTS: Supabase SDK + Config + API (for session check) + Loading JS
+       ==================================================================== -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="loading.js"></script>
+
+</body>
+</html>

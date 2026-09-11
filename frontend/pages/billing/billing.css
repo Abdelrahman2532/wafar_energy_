@@ -72,10 +72,17 @@
     }
 
     /* Reset & Base */
+    /* Reset & Base */
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    html {
+      min-height: 100%;
+      overflow-y: auto;
+      scroll-behavior: smooth;
     }
 
     body {
@@ -84,6 +91,7 @@
       min-height: 100vh;
       display: flex;
       overflow-x: hidden;
+      overflow-y: auto;
       -webkit-font-smoothing: antialiased;
       line-height: 1.5;
     }
@@ -310,9 +318,10 @@
     .main-wrapper {
       flex: 1;
       margin-left: var(--sidebar-width);
-      padding: 24px 32px 32px 32px;
+      padding: 24px 32px 48px 32px;
       max-width: 1540px;
       width: calc(100% - var(--sidebar-width));
+      min-height: 100vh;
       transition: var(--transition);
       background-color: var(--bg-app);
     }

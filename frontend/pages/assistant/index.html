@@ -72,7 +72,7 @@
             </svg>
           </span>
           <span class="nav-label" data-i18n="nav_points">WAFAR Points</span>
-          <span class="nav-badge badge-points">80 pts</span>
+          <span class="nav-badge badge-points">-- pts</span>
         </a>
 
         <a href="../billing/index.html" class="nav-item">
@@ -347,6 +347,16 @@
         <div class="suggested-prompts-bar">
           <span class="suggested-label" data-i18n="label_suggested_for_you">Suggested for you</span>
 
+          <button class="prompt-chip-btn" onclick="fetchWeeklySummary()">
+            <img src="../../assets/images/wafar-ai-avatar.png" alt="Icon" onerror="this.style.display='none'">
+            <span data-i18n="prompt_weekly_summary">Weekly Summary</span>
+          </button>
+
+          <button class="prompt-chip-btn" onclick="fetchSmartTips()">
+            <img src="../../assets/images/wafar-ai-avatar.png" alt="Icon" onerror="this.style.display='none'">
+            <span data-i18n="prompt_smart_tips">Smart Tips</span>
+          </button>
+
           <button class="prompt-chip-btn" onclick="sendPrompt('How can I save more energy?')">
             <img src="../../assets/images/wafar-ai-avatar.png" alt="Icon" onerror="this.style.display='none'">
             <span data-i18n="prompt_save_energy">How can I save more energy?</span>
@@ -355,16 +365,6 @@
           <button class="prompt-chip-btn" onclick="sendPrompt('What is my daily average usage?')">
             <img src="../../assets/images/wafar-ai-avatar.png" alt="Icon" onerror="this.style.display='none'">
             <span data-i18n="prompt_daily_avg">What is my daily average usage?</span>
-          </button>
-
-          <button class="prompt-chip-btn" onclick="sendPrompt('Best time to use appliances?')">
-            <img src="../../assets/images/wafar-ai-avatar.png" alt="Icon" onerror="this.style.display='none'">
-            <span data-i18n="prompt_best_time">Best time to use appliances?</span>
-          </button>
-
-          <button class="prompt-chip-btn" onclick="sendPrompt('More suggestions')">
-            <img src="../../assets/images/wafar-ai-avatar.png" alt="Icon" onerror="this.style.display='none'">
-            <span data-i18n="prompt_more_suggestions">More suggestions</span>
           </button>
         </div>
 

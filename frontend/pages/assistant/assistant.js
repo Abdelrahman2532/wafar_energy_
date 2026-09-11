@@ -62,6 +62,230 @@ function showToast(msg, icon = '✓') {
       handleChatSubmit(new Event('submit'));
     }
 
+    async function fetchWeeklySummary() {
+      const viewport = document.getElementById('chatViewport');
+      const isAr = typeof i18n !== 'undefined' && i18n.isRtl();
+      const label = isAr ? 'الملخص الأسبوعي' : 'Weekly Summary';
+
+      // Append User message
+      const userRow = document.createElement('div');
+      userRow.className = 'chat-message-row user';
+      userRow.innerHTML = `
+        <div class="msg-avatar">AM</div>
+        <div class="msg-bubble-wrap">
+          <div class="msg-bubble-card">${escapeHtml(label)}</div>
+          <span class="msg-time-stamp">${isAr ? 'الآن' : 'Just now'}</span>
+        </div>
+      `;
+      viewport.appendChild(userRow);
+      viewport.scrollTop = viewport.scrollHeight;
+
+      // Append AI typing indicator
+      const typingRow = document.createElement('div');
+      typingRow.className = 'chat-message-row ai';
+      typingRow.id = 'aiTypingBubble';
+      typingRow.innerHTML = `
+        <div class="msg-avatar">
+          <img src="../../assets/images/wafar-ai-avatar.png" alt="AI Avatar">
+        </div>
+        <div class="msg-bubble-wrap">
+          <div class="msg-bubble-card" style="display:flex; align-items:center; gap:6px; padding: 12px 18px;">
+            <span style="font-size: 12px; color: var(--text-muted);">${isAr ? 'جاري التحليل...' : 'WAFAR AI is analyzing...'}</span>
+          </div>
+        </div>
+      `;
+      viewport.appendChild(typingRow);
+      viewport.scrollTop = viewport.scrollHeight;
+
+      let householdId = "";
+      try {
+        const ctx = await DataAPI.getHouseholdContext();
+        if (ctx?.householdId) householdId = ctx.householdId;
+      } catch (e) {
+        console.warn("Could not get household context:", e);
+      }
+
+      try {
+        const res = await AssistantAPI.getWeeklySummary(householdId);
+        const typingEl = document.getElementById('aiTypingBubble');
+        if (typingEl) typingEl.remove();
+
+        const aiRow = document.createElement('div');
+        aiRow.className = 'chat-message-row ai';
+
+        if (res.success && res.answer) {
+          aiRow.innerHTML = `
+            <div class="msg-avatar">
+              <img src="../../assets/images/wafar-ai-avatar.png" alt="AI Avatar">
+            </div>
+            <div class="msg-bubble-wrap">
+              <div class="msg-bubble-card">${formatAssistantResponse(res.answer)}</div>
+              <span class="msg-time-stamp">${isAr ? 'الآن' : 'Just now'}</span>
+            </div>
+          `;
+        } else {
+          const errorMsg = isAr ? 
+            'عذراً، لم أتمكن من جلب الملخص الأسبوعي حالياً. يرجى المحاولة مرة أخرى.' : 
+            "Sorry, I couldn't fetch the weekly summary right now. Please try again.";
+          aiRow.innerHTML = `
+            <div class="msg-avatar">
+              <img src="../../assets/images/wafar-ai-avatar.png" alt="AI Avatar">
+            </div>
+            <div class="msg-bubble-wrap">
+              <div class="msg-bubble-card" style="border-left: 3px solid #e74c3c;">${escapeHtml(errorMsg)}</div>
+              <span class="msg-time-stamp">${isAr ? 'الآن' : 'Just now'}</span>
+            </div>
+          `;
+        }
+
+        viewport.appendChild(aiRow);
+        viewport.scrollTop = viewport.scrollHeight;
+      } catch (err) {
+        const typingEl = document.getElementById('aiTypingBubble');
+        if (typingEl) typingEl.remove();
+
+        const aiRow = document.createElement('div');
+        aiRow.className = 'chat-message-row ai';
+        const errorMsg = isAr ? 
+          'عذراً، حدث خطأ أثناء الاتصال. يرجى المحاولة مرة أخرى.' : 
+          "Sorry, a network error occurred. Please try again.";
+        aiRow.innerHTML = `
+          <div class="msg-avatar">
+            <img src="../../assets/images/wafar-ai-avatar.png" alt="AI Avatar">
+          </div>
+          <div class="msg-bubble-wrap">
+            <div class="msg-bubble-card" style="border-left: 3px solid #e74c3c;">${escapeHtml(errorMsg)}</div>
+            <span class="msg-time-stamp">${isAr ? 'الآن' : 'Just now'}</span>
+          </div>
+        `;
+        viewport.appendChild(aiRow);
+        viewport.scrollTop = viewport.scrollHeight;
+      }
+    }
+
+    async function fetchSmartTips() {
+      const viewport = document.getElementById('chatViewport');
+      const isAr = typeof i18n !== 'undefined' && i18n.isRtl();
+      const label = isAr ? 'نصائح ذكية' : 'Smart Tips';
+
+      // Append User message
+      const userRow = document.createElement('div');
+      userRow.className = 'chat-message-row user';
+      userRow.innerHTML = `
+        <div class="msg-avatar">AM</div>
+        <div class="msg-bubble-wrap">
+          <div class="msg-bubble-card">${escapeHtml(label)}</div>
+          <span class="msg-time-stamp">${isAr ? 'الآن' : 'Just now'}</span>
+        </div>
+      `;
+      viewport.appendChild(userRow);
+      viewport.scrollTop = viewport.scrollHeight;
+
+      // Append AI typing indicator
+      const typingRow = document.createElement('div');
+      typingRow.className = 'chat-message-row ai';
+      typingRow.id = 'aiTypingBubble';
+      typingRow.innerHTML = `
+        <div class="msg-avatar">
+          <img src="../../assets/images/wafar-ai-avatar.png" alt="AI Avatar">
+        </div>
+        <div class="msg-bubble-wrap">
+          <div class="msg-bubble-card" style="display:flex; align-items:center; gap:6px; padding: 12px 18px;">
+            <span style="font-size: 12px; color: var(--text-muted);">${isAr ? 'جاري التحليل...' : 'WAFAR AI is analyzing...'}</span>
+          </div>
+        </div>
+      `;
+      viewport.appendChild(typingRow);
+      viewport.scrollTop = viewport.scrollHeight;
+
+      let householdId = "";
+      try {
+        const ctx = await DataAPI.getHouseholdContext();
+        if (ctx?.householdId) householdId = ctx.householdId;
+      } catch (e) {
+        console.warn("Could not get household context:", e);
+      }
+
+      try {
+        const res = await AssistantAPI.getTips(householdId);
+        const typingEl = document.getElementById('aiTypingBubble');
+        if (typingEl) typingEl.remove();
+
+        const aiRow = document.createElement('div');
+        aiRow.className = 'chat-message-row ai';
+
+        if (res.success && res.answer) {
+          aiRow.innerHTML = `
+            <div class="msg-avatar">
+              <img src="../../assets/images/wafar-ai-avatar.png" alt="AI Avatar">
+            </div>
+            <div class="msg-bubble-wrap">
+              <div class="msg-bubble-card">${formatAssistantResponse(res.answer)}</div>
+              <span class="msg-time-stamp">${isAr ? 'الآن' : 'Just now'}</span>
+            </div>
+          `;
+        } else {
+          const errorMsg = isAr ? 
+            'عذراً، لم أتمكن من جلب النصائح الذكية حالياً. يرجى المحاولة مرة أخرى.' : 
+            "Sorry, I couldn't fetch smart tips right now. Please try again.";
+          aiRow.innerHTML = `
+            <div class="msg-avatar">
+              <img src="../../assets/images/wafar-ai-avatar.png" alt="AI Avatar">
+            </div>
+            <div class="msg-bubble-wrap">
+              <div class="msg-bubble-card" style="border-left: 3px solid #e74c3c;">${escapeHtml(errorMsg)}</div>
+              <span class="msg-time-stamp">${isAr ? 'الآن' : 'Just now'}</span>
+            </div>
+          `;
+        }
+
+        viewport.appendChild(aiRow);
+        viewport.scrollTop = viewport.scrollHeight;
+      } catch (err) {
+        const typingEl = document.getElementById('aiTypingBubble');
+        if (typingEl) typingEl.remove();
+
+        const aiRow = document.createElement('div');
+        aiRow.className = 'chat-message-row ai';
+        const errorMsg = isAr ? 
+          'عذراً، حدث خطأ أثناء الاتصال. يرجى المحاولة مرة أخرى.' : 
+          "Sorry, a network error occurred. Please try again.";
+        aiRow.innerHTML = `
+          <div class="msg-avatar">
+            <img src="../../assets/images/wafar-ai-avatar.png" alt="AI Avatar">
+          </div>
+          <div class="msg-bubble-wrap">
+            <div class="msg-bubble-card" style="border-left: 3px solid #e74c3c;">${escapeHtml(errorMsg)}</div>
+            <span class="msg-time-stamp">${isAr ? 'الآن' : 'Just now'}</span>
+          </div>
+        `;
+        viewport.appendChild(aiRow);
+        viewport.scrollTop = viewport.scrollHeight;
+      }
+    }
+
+    // Aliases for UI callers
+    const requestWeeklySummary = fetchWeeklySummary;
+    const getWeeklySummary = fetchWeeklySummary;
+    const sendWeeklySummary = fetchWeeklySummary;
+    const requestSmartTips = fetchSmartTips;
+    const getSmartTips = fetchSmartTips;
+    const fetchTips = fetchSmartTips;
+    const getTips = fetchSmartTips;
+    const sendSmartTips = fetchSmartTips;
+
+    window.fetchWeeklySummary = fetchWeeklySummary;
+    window.requestWeeklySummary = requestWeeklySummary;
+    window.getWeeklySummary = getWeeklySummary;
+    window.sendWeeklySummary = sendWeeklySummary;
+
+    window.fetchSmartTips = fetchSmartTips;
+    window.requestSmartTips = requestSmartTips;
+    window.getSmartTips = getSmartTips;
+    window.fetchTips = fetchTips;
+    window.getTips = getTips;
+    window.sendSmartTips = sendSmartTips;
+
     function formatAssistantResponse(text) {
       if (!text) return "";
       let formatted = escapeHtml(text);
@@ -115,7 +339,13 @@ function showToast(msg, icon = '✓') {
       viewport.appendChild(typingRow);
       viewport.scrollTop = viewport.scrollHeight;
 
-      const householdId = localStorage.getItem("wafar_household_id") || "H00001";
+      let householdId = "";
+      try {
+        const ctx = await DataAPI.getHouseholdContext();
+        if (ctx?.householdId) householdId = ctx.householdId;
+      } catch (e) {
+        console.warn("Could not get household context:", e);
+      }
 
       try {
         const res = await AssistantAPI.askQuestion(query, householdId);
@@ -208,7 +438,18 @@ function showToast(msg, icon = '✓') {
         document.documentElement.setAttribute('data-theme', 'dark');
       }
 
-      // 2. Fetch Initial LED State from Database (public.led_control row id = 1)
+      // 2. Sync Sidebar Profile & Points
+      try {
+        const { profile, householdId } = await DataAPI.getHouseholdContext();
+        if (householdId) {
+          const pointsData = await DataAPI.getWafarPoints(householdId);
+          DataAPI.syncSidebar(profile, pointsData?.points_balance || 0);
+        }
+      } catch (err) {
+        console.warn("Could not sync sidebar:", err);
+      }
+
+      // 3. Fetch Initial LED State from Database (public.led_control row id = 1)
       try {
         const initialLedState = await LedAPI.getLedState();
         updateSidebarLampBadge(initialLedState);

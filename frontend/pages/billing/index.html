@@ -72,7 +72,7 @@
             </svg>
           </span>
           <span class="nav-label" data-i18n="nav_points">WAFAR Points</span>
-          <span class="nav-badge badge-points">80 pts</span>
+          <span class="nav-badge badge-points">-- pts</span>
         </a>
 
         <a href="../billing/index.html" class="nav-item active">
@@ -207,7 +207,7 @@
                   <circle cx="12" cy="12" r="10"></circle>
                   <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
-                <span data-i18n="bill_due_date_label">Due: Sep 15, 2026</span>
+                <span id="billDueDate">Due: --</span>
               </div>
             </div>
 
@@ -216,17 +216,17 @@
               <div class="bill-stats-side">
                 <div class="bill-stat-row">
                   <span class="bill-stat-label" data-i18n="bill_original_amount">Bill Original Amount</span>
-                  <strong class="bill-stat-val">342.50 EGP</strong>
+                  <strong class="bill-stat-val" id="billOriginalAmount">-- EGP</strong>
                 </div>
 
                 <div class="bill-stat-row">
                   <span class="bill-stat-label" data-i18n="discount_applied">Discount Applied</span>
-                  <strong class="bill-stat-val discount-green">-8.00 EGP</strong>
+                  <strong class="bill-stat-val discount-green" id="billDiscountAmount">-0.00 EGP</strong>
                 </div>
 
                 <div class="total-amount-block">
                   <span class="total-amount-label" data-i18n="total_amount_label">Total Amount</span>
-                  <div class="total-amount-val">334.50 EGP</div>
+                  <div class="total-amount-val" id="billTotalAmount">-- EGP</div>
                 </div>
 
                 <button class="btn-pay-my-bill" onclick="handlePayBill()">
@@ -271,27 +271,11 @@
                     <th data-i18n="th_status">Status</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="invoicesTableBody">
                   <tr>
-                    <td class="inv-id-cell">INV-EGY-08</td>
-                    <td>Aug 2026</td>
-                    <td>215.4 kWh</td>
-                    <td class="inv-amount-cell">334.50 EGP</td>
-                    <td><span class="badge-status badge-due" data-i18n="status_due_soon">Due Soon</span></td>
-                  </tr>
-                  <tr>
-                    <td class="inv-id-cell">INV-EGY-07</td>
-                    <td>Jul 2026</td>
-                    <td>248 kWh</td>
-                    <td class="inv-amount-cell">375.00 EGP</td>
-                    <td><span class="badge-status badge-paid" data-i18n="status_paid">Paid</span></td>
-                  </tr>
-                  <tr>
-                    <td class="inv-id-cell">INV-EGY-06</td>
-                    <td>Jun 2026</td>
-                    <td>260.5 kWh</td>
-                    <td class="inv-amount-cell">395.20 EGP</td>
-                    <td><span class="badge-status badge-paid" data-i18n="status_paid">Paid</span></td>
+                    <td colspan="5" style="text-align: center; padding: 20px; color: var(--text-muted);">
+                      Loading invoices...
+                    </td>
                   </tr>
                 </tbody>
               </table>

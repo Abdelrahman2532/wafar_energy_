@@ -1,0 +1,458 @@
+/* ==========================================================================
+   WAFAR LOADING SCREEN — CSS
+   ========================================================================== */
+
+/* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background: linear-gradient(145deg, #f0f5ec 0%, #eaf2e5 25%, #f5f8f2 50%, #eef4ea 75%, #f2f7ef 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   DECORATIVE BACKGROUND ELEMENTS
+   ========================================================================== */
+
+/* Top-left arc */
+.deco-arc-tl {
+  position: fixed;
+  top: -80px;
+  left: -80px;
+  width: 320px;
+  height: 320px;
+  border: 1.5px solid rgba(77, 109, 57, 0.12);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Bottom-right arc */
+.deco-arc-br {
+  position: fixed;
+  bottom: -60px;
+  right: -60px;
+  width: 400px;
+  height: 400px;
+  border: 1.5px solid rgba(77, 109, 57, 0.10);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Green dots */
+.deco-dot {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background-color: #4d6d39;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.deco-dot-1 {
+  top: 105px;
+  left: 150px;
+}
+
+.deco-dot-2 {
+  bottom: 145px;
+  right: 170px;
+}
+
+/* Soft leaf shadows (blurred green blobs) */
+.deco-leaf {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.07;
+}
+
+.deco-leaf-1 {
+  top: 80px;
+  right: 280px;
+  width: 120px;
+  height: 60px;
+  background: #4d6d39;
+  border-radius: 60% 40% 70% 30%;
+  transform: rotate(-25deg);
+}
+
+.deco-leaf-2 {
+  top: 140px;
+  right: 200px;
+  width: 80px;
+  height: 40px;
+  background: #4d6d39;
+  border-radius: 50% 60% 40% 70%;
+  transform: rotate(15deg);
+}
+
+.deco-leaf-3 {
+  top: 60px;
+  left: 45%;
+  width: 90px;
+  height: 45px;
+  background: #4d6d39;
+  border-radius: 40% 70% 30% 60%;
+  transform: rotate(-40deg);
+}
+
+.deco-leaf-4 {
+  bottom: 200px;
+  left: 100px;
+  width: 70px;
+  height: 35px;
+  background: #4d6d39;
+  border-radius: 50% 50% 60% 40%;
+  transform: rotate(30deg);
+}
+
+/* ==========================================================================
+   TOP-RIGHT BADGE — "CLEAN ENERGY / BETTER TOMORROW"
+   ========================================================================== */
+.badge-top-right {
+  position: fixed;
+  top: 28px;
+  right: 36px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 10;
+  animation: fadeSlideDown 0.8s ease 0.3s both;
+}
+
+.badge-top-right .badge-icon {
+  width: 22px;
+  height: 22px;
+  color: #4d6d39;
+  opacity: 0.7;
+}
+
+.badge-top-right .badge-text {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: #7a9a6a;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   BOTTOM-LEFT ICONS
+   ========================================================================== */
+.icons-bottom-left {
+  position: fixed;
+  bottom: 32px;
+  left: 36px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  z-index: 10;
+  animation: fadeSlideUp 0.8s ease 0.5s both;
+}
+
+.bl-icon-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+}
+
+.bl-icon-item svg {
+  width: 20px;
+  height: 20px;
+  color: #4d6d39;
+  opacity: 0.55;
+}
+
+.bl-separator {
+  width: 1px;
+  height: 22px;
+  background-color: rgba(77, 109, 57, 0.2);
+  margin: 0 4px;
+}
+
+/* ==========================================================================
+   MAIN CENTER CONTENT
+   ========================================================================== */
+.loading-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  z-index: 5;
+  position: relative;
+}
+
+/* WAFAR Logo */
+.wafar-logo-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28px;
+  animation: fadeScaleIn 0.9s ease 0.1s both;
+}
+
+.wafar-logo-text {
+  font-size: 72px;
+  font-weight: 900;
+  color: #2a3e22;
+  letter-spacing: 4px;
+  line-height: 1;
+  display: flex;
+  align-items: flex-end;
+}
+
+.wafar-logo-text .letter-r-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: flex-end;
+}
+
+/* The lightning bolt that replaces / overlaps the R */
+.lightning-bolt {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.lightning-bolt svg {
+  width: 38px;
+  height: 50px;
+  filter: drop-shadow(0 2px 6px rgba(218, 165, 32, 0.25));
+}
+
+/* Welcome text */
+.welcome-text {
+  text-align: center;
+  margin-bottom: 8px;
+  animation: fadeSlideUp 0.8s ease 0.3s both;
+}
+
+.welcome-text h1 {
+  font-size: 24px;
+  font-weight: 400;
+  color: #3a5530;
+  letter-spacing: 0.3px;
+}
+
+.welcome-text h1 strong {
+  font-weight: 800;
+}
+
+/* Subtitle */
+.subtitle-text {
+  font-size: 14px;
+  color: #7a9a6a;
+  font-weight: 500;
+  margin-bottom: 28px;
+  text-align: center;
+  animation: fadeSlideUp 0.8s ease 0.45s both;
+}
+
+/* ==========================================================================
+   PROGRESS BAR
+   ========================================================================== */
+.progress-container {
+  width: 220px;
+  height: 12px;
+  background: rgba(77, 109, 57, 0.10);
+  border-radius: 30px;
+  overflow: hidden;
+  position: relative;
+  animation: fadeSlideUp 0.8s ease 0.55s both;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #4d6d39, #5a8042);
+  border-radius: 30px;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+/* ==========================================================================
+   ANIMATIONS
+   ========================================================================== */
+@keyframes fadeScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+/* Full-page fade out */
+.loading-fade-out {
+  animation: pageFadeOut 0.6s ease forwards;
+}
+
+@keyframes pageFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.03);
+  }
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 768px) {
+  .wafar-logo-text {
+    font-size: 52px;
+    letter-spacing: 2px;
+  }
+
+  .lightning-bolt svg {
+    width: 28px;
+    height: 38px;
+  }
+
+  .lightning-bolt {
+    top: -6px;
+  }
+
+  .welcome-text h1 {
+    font-size: 20px;
+  }
+
+  .subtitle-text {
+    font-size: 13px;
+  }
+
+  .progress-container {
+    width: 180px;
+    height: 10px;
+  }
+
+  .badge-top-right {
+    top: 16px;
+    right: 16px;
+  }
+
+  .badge-top-right .badge-text {
+    font-size: 9px;
+    letter-spacing: 1.2px;
+  }
+
+  .icons-bottom-left {
+    bottom: 20px;
+    left: 20px;
+  }
+
+  .deco-arc-tl {
+    width: 200px;
+    height: 200px;
+    top: -60px;
+    left: -60px;
+  }
+
+  .deco-arc-br {
+    width: 250px;
+    height: 250px;
+    bottom: -50px;
+    right: -50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wafar-logo-text {
+    font-size: 40px;
+    letter-spacing: 1px;
+  }
+
+  .lightning-bolt svg {
+    width: 22px;
+    height: 30px;
+  }
+
+  .welcome-text h1 {
+    font-size: 17px;
+  }
+
+  .subtitle-text {
+    font-size: 12px;
+  }
+
+  .progress-container {
+    width: 150px;
+    height: 9px;
+  }
+
+  .badge-top-right .badge-text {
+    display: none;
+  }
+
+  .deco-dot-1,
+  .deco-dot-2 {
+    display: none;
+  }
+}

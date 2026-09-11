@@ -2,7 +2,7 @@
  * WAFAR API & Data Layer (Integrated with Supabase Backend & Realtime)
  *
  * Hardware LED Control Table: public.led_control (id = 1, is_on = boolean)
- * Household Profile Table: public.profiles (id = user_id, household_id = "H00001")
+ * Household Profile Table: public.profiles (id = user_id, household_id)
  */
 
 // Environment variable resolver across runtime environments (Browser via config.js, Node, Bundler)
@@ -121,10 +121,6 @@ const AuthAPI = {
     const supabase = getSupabase();
     if (!supabase) {
       console.warn("Supabase SDK not loaded yet.");
-      if (email.toLowerCase().includes("h00001") || email.toLowerCase().includes("demo")) {
-        localStorage.setItem("wafar_household_id", "H00001");
-        return { success: true, householdId: "H00001" };
-      }
       return { success: false, error: "Authentication service unavailable." };
     }
 
@@ -144,23 +140,27 @@ const AuthAPI = {
       }
 
       // Fetch user profile to detect household_id
-      let householdId = "H00001";
+      let householdId = null;
+      let profile = null;
       try {
-        const { data: profile, error: profError } = await supabase
+        const { data: prof, error: profError } = await supabase
           .from("profiles")
           .select("*")
           .eq("id", data.user.id)
-          .single();
+          .maybeSingle();
 
-        if (!profError && profile) {
-          householdId = profile.household_id || "H00001";
+        if (!profError && prof) {
+          profile = prof;
+          householdId = prof.household_id || null;
+          if (householdId) {
+            localStorage.setItem("wafar_household_id", householdId);
+          }
           localStorage.setItem("wafar_user_profile", JSON.stringify(profile));
         }
       } catch (profErr) {
         console.warn("Profile fetch error:", profErr);
       }
 
-      localStorage.setItem("wafar_household_id", householdId);
       return {
         success: true,
         user: data.user,
@@ -202,10 +202,10 @@ const AuthAPI = {
         .from("profiles")
         .select("*")
         .eq("id", user.id)
-        .single();
+        .maybeSingle();
 
-      if (error) {
-        return { id: user.id, email: user.email, household_id: localStorage.getItem("wafar_household_id") || "H00001" };
+      if (error || !profile) {
+        return { id: user.id, email: user.email, household_id: localStorage.getItem("wafar_household_id") || null };
       }
       return profile;
     } catch (e) {
@@ -662,125 +662,460 @@ const DevicesAPI = {
 };
 
 // ==========================================================================
-// POINTS & REWARDS API
+// DATA API (Dynamic Supabase Data Layer for WAFAR)
 // ==========================================================================
 
-const PointsAPI = {
-  getPointsSummary: async () => {
-    const pts = WafarData.pointsProfile.totalPoints;
-    const discount = Math.floor(pts / WafarData.pointsProfile.pointsPerEGP);
-    const remainder = pts % WafarData.pointsProfile.pointsPerEGP;
-    const needed = remainder === 0 ? 10 : 10 - remainder;
+const DataAPI = {
+  /**
+   * Resolve authenticated user profile and household_id from Supabase
+   */
+  getHouseholdContext: async () => {
+    const supabase = getSupabase();
+    let profile = null;
+    let householdId = null;
+
+    if (supabase) {
+      try {
+        const { data: { user }, error: userErr } = await supabase.auth.getUser();
+        if (user && !userErr) {
+          const { data: prof, error: profErr } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", user.id)
+            .maybeSingle();
+
+          if (!profErr && prof) {
+            profile = prof;
+            householdId = prof.household_id || null;
+            try {
+              if (householdId) localStorage.setItem("wafar_household_id", householdId);
+              localStorage.setItem("wafar_user_profile", JSON.stringify(profile));
+            } catch (e) {}
+          }
+        }
+      } catch (err) {
+        console.warn("[DataAPI] Profile fetch exception:", err);
+      }
+    }
+
+    if (!householdId) {
+      try {
+        householdId = localStorage.getItem("wafar_household_id");
+        const cachedProf = localStorage.getItem("wafar_user_profile");
+        if (cachedProf) profile = JSON.parse(cachedProf);
+      } catch (e) {}
+    }
 
     return {
+      householdId: householdId || null,
+      profile: profile || null
+    };
+  },
+
+  /**
+   * Sync Sidebar User info (Name, Avatar, Points badge)
+   */
+  syncSidebar: (profile, points) => {
+    const isAr = typeof i18n !== 'undefined' && i18n.isRtl();
+    const nameEl = document.querySelector('.sidebar-user .user-name');
+    const aptEl = document.querySelector('.sidebar-user .user-apt');
+    const avatarEl = document.querySelector('.sidebar-user .user-avatar');
+    const pointsBadge = document.querySelector('.nav-badge.badge-points');
+
+    if (profile) {
+      const displayName = profile.full_name || (isAr ? "مستخدم وفّر" : "WAFAR User");
+      if (nameEl) nameEl.textContent = displayName;
+      if (aptEl && profile.household_id) {
+        aptEl.textContent = isAr ? `وحدة ${profile.household_id}` : `Unit ${profile.household_id}`;
+      }
+      if (avatarEl && profile.full_name) {
+        const parts = profile.full_name.trim().split(/\s+/);
+        const initials = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : parts[0].slice(0, 2).toUpperCase();
+        avatarEl.textContent = initials;
+      }
+    }
+
+    let ptsNum = null;
+    if (typeof points === 'number') {
+      ptsNum = points;
+    } else if (points && typeof points === 'object') {
+      ptsNum = typeof points.points !== 'undefined' ? points.points : points.points_balance;
+    }
+
+    if (pointsBadge && ptsNum !== null && typeof ptsNum !== 'undefined') {
+      pointsBadge.textContent = `${ptsNum} pts`;
+    }
+  },
+
+  /**
+   * Fetch energy consumption records for household
+   */
+  getEnergyConsumption: async (householdId) => {
+    if (!householdId) return { records: [], latest: null, previous: null, avgKWh: 0, totalKWh: 0, maxRecord: null, minRecord: null };
+    const supabase = getSupabase();
+    if (!supabase) return { records: [], latest: null, previous: null, avgKWh: 0, totalKWh: 0, maxRecord: null, minRecord: null };
+
+    try {
+      const { data, error } = await supabase
+        .from("energy_consumption")
+        .select("*")
+        .eq("household_id", householdId)
+        .order("date", { ascending: true });
+
+      if (error || !Array.isArray(data) || data.length === 0) {
+        if (error) console.error("[DataAPI.getEnergyConsumption] Supabase error:", error);
+        return { records: [], latest: null, previous: null, avgKWh: 0, totalKWh: 0, maxRecord: null, minRecord: null };
+      }
+
+      const records = data;
+      const totalKWh = records.reduce((sum, r) => sum + (Number(r.energy_consumption_kwh) || 0), 0);
+      const avgKWh = records.length > 0 ? totalKWh / records.length : 0;
+      const latest = records[records.length - 1];
+      const previous = records.length > 1 ? records[records.length - 2] : null;
+
+      let maxRecord = records[0];
+      let minRecord = records[0];
+      records.forEach(r => {
+        if (Number(r.energy_consumption_kwh) > Number(maxRecord.energy_consumption_kwh)) maxRecord = r;
+        if (Number(r.energy_consumption_kwh) < Number(minRecord.energy_consumption_kwh)) minRecord = r;
+      });
+
+      return {
+        records,
+        latest,
+        previous,
+        avgKWh: Number(avgKWh.toFixed(2)),
+        totalKWh: Number(totalKWh.toFixed(2)),
+        maxRecord,
+        minRecord
+      };
+    } catch (err) {
+      console.error("[DataAPI.getEnergyConsumption] Error:", err);
+      return { records: [], latest: null, previous: null, avgKWh: 0, totalKWh: 0, maxRecord: null, minRecord: null };
+    }
+  },
+
+  /**
+   * Fetch hourly energy usage for household
+   */
+  getHourlyEnergyUsage: async (householdId, date) => {
+    if (!householdId) return [];
+    const supabase = getSupabase();
+    if (!supabase) return [];
+
+    try {
+      let query = supabase
+        .from("hourly_energy_usage")
+        .select("*")
+        .eq("household_id", householdId);
+
+      if (date) {
+        query = query.eq("date", date);
+      }
+
+      const { data, error } = await query.order("hour", { ascending: true });
+      if (error || !Array.isArray(data)) {
+        if (error) console.warn("[DataAPI.getHourlyEnergyUsage] Query notice:", error.message);
+        return [];
+      }
+      return data;
+    } catch (err) {
+      console.error("[DataAPI.getHourlyEnergyUsage] Error:", err);
+      return [];
+    }
+  },
+
+  /**
+   * Fetch consumption breakdown for household
+   */
+  getConsumptionBreakdown: async (householdId, date) => {
+    if (!householdId) return [];
+    const supabase = getSupabase();
+    if (!supabase) return [];
+
+    try {
+      let query = supabase
+        .from("consumption_breakdown")
+        .select("*")
+        .eq("household_id", householdId);
+
+      if (date) {
+        query = query.eq("date", date);
+      }
+
+      const { data, error } = await query;
+      if (error || !Array.isArray(data) || data.length === 0) {
+        if (error) console.warn("[DataAPI.getConsumptionBreakdown] Query notice:", error.message);
+        return [];
+      }
+
+      // If no specific date was queried and multiple dates exist, group dynamically by category
+      if (!date && data.length > 0) {
+        const categoryMap = {};
+        data.forEach(row => {
+          const cat = row.category || 'Other';
+          const kwh = Number(row.consumption_kwh) || 0;
+          if (!categoryMap[cat]) {
+            categoryMap[cat] = { category: cat, consumption_kwh: 0 };
+          }
+          categoryMap[cat].consumption_kwh += kwh;
+        });
+
+        const total = Object.values(categoryMap).reduce((s, c) => s + c.consumption_kwh, 0) || 1;
+        return Object.values(categoryMap).map(c => ({
+          category: c.category,
+          consumption_kwh: Number(c.consumption_kwh.toFixed(2)),
+          percentage: Math.round((c.consumption_kwh / total) * 100)
+        })).sort((a, b) => b.consumption_kwh - a.consumption_kwh);
+      }
+
+      return data;
+    } catch (err) {
+      console.error("[DataAPI.getConsumptionBreakdown] Error:", err);
+      return [];
+    }
+  },
+
+  /**
+   * Fetch WAFAR points balance
+   */
+  getWafarPoints: async (householdId) => {
+    if (!householdId) return { points: 0, points_balance: 0, discountEGP: 0, neededForNextEGP: 10 };
+    const supabase = getSupabase();
+    if (!supabase) return { points: 0, points_balance: 0, discountEGP: 0, neededForNextEGP: 10 };
+
+    try {
+      const { data, error } = await supabase
+        .from("wafar_points")
+        .select("*")
+        .eq("household_id", householdId)
+        .maybeSingle();
+
+      if (error || !data) {
+        if (error) console.error("[DataAPI.getWafarPoints] Supabase error:", error);
+        return { points: 0, points_balance: 0, discountEGP: 0, neededForNextEGP: 10 };
+      }
+
+      const pts = Number(data.points ?? data.points_balance ?? 0);
+      const discount = Math.floor(pts / 10);
+      const remainder = pts % 10;
+      const needed = remainder === 0 ? 10 : 10 - remainder;
+
+      return {
+        points: pts,
+        points_balance: pts,
+        discountEGP: discount,
+        neededForNextEGP: needed,
+        updated_at: data.updated_at
+      };
+    } catch (err) {
+      console.error("[DataAPI.getWafarPoints] Error:", err);
+      return { points: 0, points_balance: 0, discountEGP: 0, neededForNextEGP: 10 };
+    }
+  },
+
+  /**
+   * Fetch points history
+   */
+  getPointsHistory: async (householdId) => {
+    if (!householdId) return [];
+    const supabase = getSupabase();
+    if (!supabase) return [];
+
+    try {
+      const { data, error } = await supabase
+        .from("wafar_points_history")
+        .select("*")
+        .eq("household_id", householdId)
+        .order("created_at", { ascending: false });
+
+      if (error || !Array.isArray(data)) {
+        if (error) console.error("[DataAPI.getPointsHistory] Supabase error:", error);
+        return [];
+      }
+      return data;
+    } catch (err) {
+      console.error("[DataAPI.getPointsHistory] Error:", err);
+      return [];
+    }
+  },
+
+  /**
+   * Fetch bills for household
+   */
+  getBills: async (householdId) => {
+    if (!householdId) return { bills: [], latest: null };
+    const supabase = getSupabase();
+    if (!supabase) return { bills: [], latest: null };
+
+    try {
+      const { data, error } = await supabase
+        .from("bills")
+        .select("*")
+        .eq("household_id", householdId)
+        .order("due_date", { ascending: false });
+
+      if (error || !Array.isArray(data) || data.length === 0) {
+        if (error) console.error("[DataAPI.getBills] Supabase error:", error);
+        return { bills: [], latest: null };
+      }
+
+      return {
+        bills: data,
+        latest: data[0]
+      };
+    } catch (err) {
+      console.error("[DataAPI.getBills] Error:", err);
+      return { bills: [], latest: null };
+    }
+  },
+
+  /**
+   * Dynamically calculate WAFAR points discount and final bill total
+   * Rules: 10 points = 1.00 EGP discount
+   * discount = Math.min(Math.floor(points / 10) * 1.00, originalAmount)
+   * totalAmount = Math.max(0, originalAmount - discount)
+   */
+  calculateBillDiscount: (originalAmount, points) => {
+    const orig = Math.max(0, Number(originalAmount) || 0);
+    const pts = Math.max(0, Number(points) || 0);
+    const rawDiscount = Math.floor(pts / 10) * 1.0;
+    const discount = Math.min(rawDiscount, orig);
+    const total = Math.max(0, orig - discount);
+    return {
+      originalAmount: orig,
       points: pts,
-      discountEGP: discount,
-      neededForNextEGP: needed,
-      history: [...WafarData.pointsHistory]
+      discountAmount: discount,
+      totalAmount: total
+    };
+  },
+
+  /**
+   * Fetch recent activities for household
+   */
+  getActivities: async (householdId, limit = 5) => {
+    if (!householdId) return [];
+    const supabase = getSupabase();
+    if (!supabase) return [];
+
+    try {
+      const { data, error } = await supabase
+        .from("activities")
+        .select("*")
+        .eq("household_id", householdId)
+        .order("created_at", { ascending: false })
+        .limit(limit);
+
+      if (error || !Array.isArray(data)) {
+        if (error) console.warn("[DataAPI.getActivities] Query notice:", error.message);
+        return [];
+      }
+      return data;
+    } catch (err) {
+      console.error("[DataAPI.getActivities] Error:", err);
+      return [];
+    }
+  }
+};
+
+// Legacy compatibility proxies
+const PointsAPI = {
+  getPointsSummary: async () => {
+    const { householdId } = await DataAPI.getHouseholdContext();
+    const pointsData = await DataAPI.getWafarPoints(householdId);
+    const history = await DataAPI.getPointsHistory(householdId);
+    return {
+      ...pointsData,
+      history
     };
   }
 };
 
-// ==========================================================================
-// BILLING & INVOICES API
-// ==========================================================================
-
 const BillingAPI = {
   getBillingSummary: async () => {
-    const pts = WafarData.pointsProfile.totalPoints;
-    const discountEGP = Math.floor(pts / 10);
-    const original = WafarData.billing.currentBill.originalAmountEGP;
-    const net = original - discountEGP;
-
-    WafarData.billing.currentBill.wafarDiscountEGP = discountEGP;
-    WafarData.billing.currentBill.netAmountEGP = net;
-
-    return { ...WafarData.billing };
+    const { householdId } = await DataAPI.getHouseholdContext();
+    const billsData = await DataAPI.getBills(householdId);
+    const pointsData = await DataAPI.getWafarPoints(householdId);
+    return {
+      currentBill: billsData.latest || {
+        originalAmountEGP: 0,
+        wafarDiscountEGP: pointsData.discountEGP,
+        netAmountEGP: 0,
+        dueDate: "-",
+        status: "unpaid",
+        period: "-",
+        kwhUsed: 0
+      },
+      invoices: billsData.bills
+    };
   },
 
   payBill: async (method) => {
-    WafarData.billing.currentBill.status = "paid";
-    const currentInv = WafarData.billing.invoices.find(i => !i.isPaid);
-    if (currentInv) {
-      currentInv.isPaid = true;
-    }
     return {
       success: true,
-      amount: WafarData.billing.currentBill.netAmountEGP,
       method: method
     };
   }
 };
 
-// ==========================================================================
-// DASHBOARD API
-// ==========================================================================
-
 const DashboardAPI = {
   getSummaryMetrics: async () => {
-    const pts = WafarData.pointsProfile.totalPoints;
-    const discountEGP = Math.floor(pts / 10);
-    const bill = WafarData.billing.currentBill;
+    const { householdId } = await DataAPI.getHouseholdContext();
+    const energy = await DataAPI.getEnergyConsumption(householdId);
+    const pointsData = await DataAPI.getWafarPoints(householdId);
+    const billsData = await DataAPI.getBills(householdId);
     const lampState = await LedAPI.getLedState();
 
+    const todayKWh = energy.latest ? Number(energy.latest.energy_consumption_kwh) : 0;
+    const prevKWh = energy.previous ? Number(energy.previous.energy_consumption_kwh) : todayKWh;
+    const savedKWh = Number((prevKWh - todayKWh).toFixed(2));
+
+    const bill = billsData.latest || {
+      original_amount: 0,
+      discount_amount: pointsData.discountEGP,
+      total_amount: 0
+    };
+
     return {
-      todayKWh: 11.90,
-      avgDailyKWh: 12.49,
-      savedKWh: 0.59,
-      lampState: lampState,
+      todayKWh,
+      avgDailyKWh: energy.avgKWh,
+      savedKWh,
+      lampState,
       lampWatts: lampState ? 15 : 0,
       lampRoom: WafarData.smartLamp.room,
       lampRoomAr: WafarData.smartLamp.room_ar,
-      billAmountEGP: bill.originalAmountEGP,
-      discountEGP: discountEGP,
-      netToPayEGP: bill.originalAmountEGP - discountEGP,
-      points: pts
+      billAmountEGP: Number(bill.original_amount || 0),
+      discountEGP: Number(bill.discount_amount || pointsData.discountEGP),
+      netToPayEGP: Number(bill.total_amount || 0),
+      points: pointsData.points
     };
   },
 
   getHourlyUsage: async () => {
-    return [
-      { hour: "00:00", kwh: 0.4, baseline: 0.5 },
-      { hour: "04:00", kwh: 0.3, baseline: 0.4 },
-      { hour: "08:00", kwh: 0.8, baseline: 1.0 },
-      { hour: "12:00", kwh: 1.4, baseline: 1.6 },
-      { hour: "16:00", kwh: 1.8, baseline: 2.1 },
-      { hour: "19:00", kwh: 2.2, baseline: 2.4 },
-      { hour: "22:00", kwh: 1.1, baseline: 1.3 }
-    ];
+    const { householdId } = await DataAPI.getHouseholdContext();
+    return DataAPI.getHourlyEnergyUsage(householdId);
   },
 
   getRecentActivity: async () => {
-    const isAr = typeof i18n !== 'undefined' && i18n.isRtl();
-    return [
-      { time: "20:14", event: isAr ? "تم تشغيل مصباح غرفة النوم (15 واط)" : "Bedroom smart lamp turned ON (15W)" },
-      { time: "18:00", event: isAr ? "استهلاكك أقل من المعدل بنسبة 5%" : "Consumption is 5% below average" },
-      { time: "14:00", event: isAr ? "كسبت 10 نقاط وفّر لترشيد الاستهلاك" : "Earned +10 WAFAR points for energy saving" }
-    ];
+    const { householdId } = await DataAPI.getHouseholdContext();
+    return DataAPI.getActivities(householdId);
   }
 };
 
-// ==========================================================================
-// ENERGY OVERVIEW API
-// ==========================================================================
-
 const EnergyAPI = {
   getAnalytics: async () => {
+    const { householdId } = await DataAPI.getHouseholdContext();
+    const energy = await DataAPI.getEnergyConsumption(householdId);
+    const billsData = await DataAPI.getBills(householdId);
+    const bill = billsData.latest;
+
     return {
-      todayKWh: 11.90,
-      avgDailyKWh: 12.49,
-      savedKWh: 0.59,
-      monthTotalKWh: 215.4,
-      monthCostEGP: 342.50,
-      dailyComparison: [
-        { label: "Mon", current: 11.8, previous: 12.5 },
-        { label: "Tue", current: 11.4, previous: 12.3 },
-        { label: "Wed", current: 12.1, previous: 12.8 },
-        { label: "Thu", current: 11.9, previous: 12.6 },
-        { label: "Fri", current: 12.8, previous: 13.4 },
-        { label: "Sat", current: 13.0, previous: 13.5 },
-        { label: "Sun", current: 11.2, previous: 12.0 }
-      ]
+      todayKWh: energy.latest ? Number(energy.latest.energy_consumption_kwh) : 0,
+      avgDailyKWh: energy.avgKWh,
+      savedKWh: energy.previous && energy.latest ? Number((energy.previous.energy_consumption_kwh - energy.latest.energy_consumption_kwh).toFixed(2)) : 0,
+      monthTotalKWh: energy.totalKWh,
+      monthCostEGP: bill ? Number(bill.total_amount) : 0,
+      records: energy.records
     };
   }
 };
@@ -796,7 +1131,7 @@ const AssistantAPI = {
    * Body: { household_id: string, question: string }
    */
   askQuestion: async (question, householdId) => {
-    const effectiveHouseholdId = householdId || localStorage.getItem("wafar_household_id") || "H00001";
+    const effectiveHouseholdId = householdId || localStorage.getItem("wafar_household_id") || "";
 
     try {
       const response = await fetch("https://wafar.onrender.com/ask", {
@@ -840,6 +1175,107 @@ const AssistantAPI = {
         error: err.message || "Network error"
       };
     }
+  },
+
+  /**
+   * Fetch weekly summary from WAFAR Chatbot Backend
+   * Endpoint: GET https://wafar.onrender.com/weekly-summary/{household_id}
+   */
+  getWeeklySummary: async (householdId) => {
+    const effectiveHouseholdId = householdId || localStorage.getItem("wafar_household_id") || "";
+
+    try {
+      const response = await fetch(`https://wafar.onrender.com/weekly-summary/${encodeURIComponent(String(effectiveHouseholdId))}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server returned HTTP ${response.status}`);
+      }
+
+      const text = await response.text();
+      let answer = "";
+      try {
+        const json = JSON.parse(text);
+        if (typeof json === "string") {
+          answer = json;
+        } else if (json && typeof json === "object") {
+          answer = json.answer || json.response || json.message || JSON.stringify(json);
+        } else {
+          answer = String(json);
+        }
+      } catch (e) {
+        answer = text;
+      }
+
+      return {
+        success: true,
+        answer: answer
+      };
+    } catch (err) {
+      console.error("[AssistantAPI] Error calling weekly-summary endpoint:", err);
+      return {
+        success: false,
+        error: err.message || "Network error"
+      };
+    }
+  },
+
+  /**
+   * Fetch smart tips from WAFAR Chatbot Backend
+   * Endpoint: GET https://wafar.onrender.com/tips/{household_id}
+   */
+  getTips: async (householdId) => {
+    const effectiveHouseholdId = householdId || localStorage.getItem("wafar_household_id") || "";
+
+    try {
+      const response = await fetch(`https://wafar.onrender.com/tips/${encodeURIComponent(String(effectiveHouseholdId))}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server returned HTTP ${response.status}`);
+      }
+
+      const text = await response.text();
+      let answer = "";
+      try {
+        const json = JSON.parse(text);
+        if (typeof json === "string") {
+          answer = json;
+        } else if (json && typeof json === "object") {
+          answer = json.answer || json.response || json.message || JSON.stringify(json);
+        } else {
+          answer = String(json);
+        }
+      } catch (e) {
+        answer = text;
+      }
+
+      return {
+        success: true,
+        answer: answer
+      };
+    } catch (err) {
+      console.error("[AssistantAPI] Error calling tips endpoint:", err);
+      return {
+        success: false,
+        error: err.message || "Network error"
+      };
+    }
+  },
+
+  /**
+   * Alias for getTips
+   */
+  getSmartTips: async (householdId) => {
+    return AssistantAPI.getTips(householdId);
   },
 
   /**

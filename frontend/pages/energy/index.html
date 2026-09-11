@@ -72,7 +72,7 @@
             </svg>
           </span>
           <span class="nav-label" data-i18n="nav_points">WAFAR Points</span>
-          <span class="nav-badge badge-points">80 pts</span>
+          <span class="nav-badge badge-points">-- pts</span>
         </a>
 
         <a href="../billing/index.html" class="nav-item">
@@ -223,11 +223,11 @@
             <span class="kpi-title" data-i18n="kpi_energy_today">TODAY'S CONSUMPTION</span>
           </div>
           <div class="kpi-value-row">
-            <span class="kpi-number">11.90</span>
+            <span class="kpi-number" id="energyValTodayKwh">--</span>
             <span class="kpi-unit">kWh</span>
           </div>
           <div class="kpi-footer">
-            <span class="chip-pill" data-i18n="kpi_energy_saved_badge">↓ 0.59 kWh saved vs yesterday</span>
+            <span class="chip-pill" id="energyValSavedBadge" data-i18n="kpi_energy_saved_badge">--</span>
           </div>
           <!-- Rising Green Wave Sparkline -->
           <div class="kpi-sparkline">
@@ -250,11 +250,11 @@
             <span class="kpi-title" data-i18n="kpi_energy_total_month">TOTAL ENERGY (THIS MONTH)</span>
           </div>
           <div class="kpi-value-row">
-            <span class="kpi-number">215.4</span>
+            <span class="kpi-number" id="energyValTotalMonth">--</span>
             <span class="kpi-unit">kWh</span>
           </div>
           <div class="kpi-footer">
-            <span class="kpi-subtext" data-i18n="kpi_energy_cycle">August Cycle</span>
+            <span class="kpi-subtext" id="energyValCycle" data-i18n="kpi_energy_cycle">April Cycle</span>
           </div>
           <!-- 5 Vertical Mini Green Bars -->
           <div class="kpi-mini-bars">
@@ -279,11 +279,11 @@
             <span class="kpi-title" data-i18n="kpi_energy_cost">TOTAL COST (THIS MONTH)</span>
           </div>
           <div class="kpi-value-row">
-            <span class="kpi-number">342.50</span>
+            <span class="kpi-number" id="energyValTotalCost">--</span>
             <span class="kpi-unit">EGP</span>
           </div>
           <div class="kpi-footer">
-            <span class="chip-pill amber" data-i18n="kpi_energy_cost_discount">-8.00 EGP discount ready</span>
+            <span class="chip-pill amber" id="energyValCostDiscount" data-i18n="kpi_energy_cost_discount">--</span>
           </div>
           <!-- 5 Vertical Mini Amber Bars -->
           <div class="kpi-mini-bars">
@@ -341,7 +341,7 @@
                 </svg>
               </div>
               <div class="trend-stat-info">
-                <span class="trend-stat-val">18.6 kWh</span>
+                <span class="trend-stat-val" id="trendDailyAvg">-- kWh</span>
                 <span class="trend-stat-label" data-i18n="stat_daily_avg">Daily Average</span>
               </div>
             </div>
@@ -354,8 +354,8 @@
                 </svg>
               </div>
               <div class="trend-stat-info">
-                <span class="trend-stat-val">21.4 kWh</span>
-                <span class="trend-stat-label"><span data-i18n="stat_highest_day">Highest Day</span> <strong style="color:var(--text-main);">Aug 29</strong></span>
+                <span class="trend-stat-val" id="trendHighestVal">-- kWh</span>
+                <span class="trend-stat-label"><span data-i18n="stat_highest_day">Highest Day</span> <strong style="color:var(--text-main);" id="trendHighestDay">--</strong></span>
               </div>
             </div>
 
@@ -370,8 +370,8 @@
                 </svg>
               </div>
               <div class="trend-stat-info">
-                <span class="trend-stat-val">8.7 kWh</span>
-                <span class="trend-stat-label"><span data-i18n="stat_lowest_day">Lowest Day</span> <strong style="color:var(--text-main);">Sep 01</strong></span>
+                <span class="trend-stat-val" id="trendLowestVal">-- kWh</span>
+                <span class="trend-stat-label"><span data-i18n="stat_lowest_day">Lowest Day</span> <strong style="color:var(--text-main);" id="trendLowestDay">--</strong></span>
               </div>
             </div>
 
@@ -383,8 +383,8 @@
                 </svg>
               </div>
               <div class="trend-stat-info">
-                <span class="trend-stat-val" style="color:var(--primary-green);">↓ 12%</span>
-                <span class="trend-stat-label" data-i18n="stat_vs_last_week">vs Last Week</span>
+                <span class="trend-stat-val" style="color:var(--primary-green);" id="trendVsLastWeek">--</span>
+                <span class="trend-stat-label" data-i18n="stat_vs_last_week">vs Average</span>
               </div>
             </div>
 
@@ -418,41 +418,9 @@
                   <th data-i18n="th_diff">Difference</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="energyLogTableBody">
                 <tr>
-                  <td>Sep 01, 2025</td>
-                  <td>11.90</td>
-                  <td><span class="diff-badge down">-0.59 ↓</span></td>
-                </tr>
-                <tr>
-                  <td>Aug 31, 2025</td>
-                  <td>12.49</td>
-                  <td><span class="diff-badge up">+1.21 ↑</span></td>
-                </tr>
-                <tr>
-                  <td>Aug 30, 2025</td>
-                  <td>14.30</td>
-                  <td><span class="diff-badge up">+0.95 ↑</span></td>
-                </tr>
-                <tr>
-                  <td>Aug 29, 2025</td>
-                  <td>21.40</td>
-                  <td><span class="diff-badge up">+4.80 ↑</span></td>
-                </tr>
-                <tr>
-                  <td>Aug 28, 2025</td>
-                  <td>16.60</td>
-                  <td><span class="diff-badge up">+1.40 ↑</span></td>
-                </tr>
-                <tr>
-                  <td>Aug 27, 2025</td>
-                  <td>15.20</td>
-                  <td><span class="diff-badge up">+0.80 ↑</span></td>
-                </tr>
-                <tr>
-                  <td>Aug 26, 2025</td>
-                  <td>14.40</td>
-                  <td><span style="color:var(--text-light);">-</span></td>
+                  <td colspan="3" style="text-align:center; color:var(--text-muted);">Loading energy records...</td>
                 </tr>
               </tbody>
             </table>
@@ -478,7 +446,7 @@
 
           <div class="donut-layout">
             <div class="donut-chart-box">
-              <svg class="donut-svg" viewBox="0 0 100 100">
+              <svg class="donut-svg" id="energyDonutSvg" viewBox="0 0 100 100">
                 <circle cx="50" cy="50" r="38" fill="none" stroke="var(--border-subtle)" stroke-width="14"></circle>
                 <!-- Air Conditioner (38%) -->
                 <circle cx="50" cy="50" r="38" fill="none" stroke="#4d6d39" stroke-width="14" stroke-dasharray="90.73 238.76" stroke-dashoffset="0"></circle>
@@ -492,12 +460,12 @@
                 <circle cx="50" cy="50" r="38" fill="none" stroke="#a0b19d" stroke-width="14" stroke-dasharray="28.65 238.76" stroke-dashoffset="-210.1"></circle>
               </svg>
               <div class="donut-center-info">
-                <span class="donut-center-val">215.4</span>
+                <span class="donut-center-val" id="energyDonutCenterVal">--</span>
                 <span class="donut-center-unit">kWh</span>
               </div>
             </div>
 
-            <div class="breakdown-legend">
+            <div class="breakdown-legend" id="energyBreakdownLegend">
               <div class="breakdown-row">
                 <div class="breakdown-label-group">
                   <span class="breakdown-dot" style="background-color: #4d6d39;"></span>
@@ -551,7 +519,7 @@
             </select>
           </div>
 
-          <div class="top-devices-list">
+          <div class="top-devices-list" id="topDevicesList">
             
             <div class="device-progress-item">
               <div class="device-icon-mini">
@@ -600,7 +568,7 @@
             <div class="device-progress-item">
               <div class="device-icon-mini">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2"></path>
+                  <path d="M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2"></path>
                 </svg>
               </div>
               <span class="device-progress-name" data-i18n="cat_lighting">Lighting</span>
@@ -643,7 +611,7 @@
               </svg>
             </div>
 
-            <p class="ai-insight-text" data-i18n="ai_insight_energy_desc">
+            <p class="ai-insight-text" id="energyAiInsightText" data-i18n="ai_insight_energy_desc">
               You can save up to <strong>2.4 kWh</strong> daily by optimizing your kitchen usage between <strong>12:00 - 3:00 PM</strong>.
             </p>
 

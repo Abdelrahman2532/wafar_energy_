@@ -2,20 +2,24 @@ import os
 import sys
 sys.stdout.reconfigure(encoding='utf-8')
 
-from google import genai
-from app.config import GEMINI_API_KEY
+from groq import Groq
+from app.config import GROQ_API_KEY
 from app.analytics import fetch_household_data, average, get_day_value, percentage, detect_anomaly, weekly_summary
 from app.predictor import predict_monthly_bill
 
-client = genai.Client(api_key=GEMINI_API_KEY)
-
+client = Groq(api_key=GROQ_API_KEY)
 
 def test_connection():
-    response = client.models.generate_content(
-        model="gemini-3.6-flash",
-        contents="Say hello in one short sentence."
+    response = client.chat.completions.create(
+        model="openai/gpt-oss-120b",
+        messages=[
+            {
+                "role": "user",
+                "content": "Say hello in one short sentence."
+            }
+        ]
     )
-    return response.text
+    return response.choices[0].message.content
 
 
 def build_context(consumption, avg, temperature, household_size, has_ac, peak_usage, saving_result, is_anomaly, predicted_monthly_kwh, estimated_bill):
@@ -52,11 +56,17 @@ Keep the answer clear, friendly, and concise.
 """
 
     try:
-        response = client.models.generate_content(
-            model="gemini-3.6-flash",
-            contents=prompt
+        response = client.chat.completions.create(
+            model="openai/gpt-oss-120b",
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
         )
-        return response.text
+
+        return response.choices[0].message.content
 
     except Exception as e:
         print(f"AI connection error: {e}")

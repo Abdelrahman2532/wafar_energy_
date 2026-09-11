@@ -72,7 +72,7 @@
             </svg>
           </span>
           <span class="nav-label" data-i18n="nav_points">WAFAR Points</span>
-          <span class="nav-badge badge-points">80 pts</span>
+          <span class="nav-badge badge-points">-- pts</span>
         </a>
 
         <a href="../billing/index.html" class="nav-item">
@@ -233,11 +233,11 @@
             </div>
           </div>
           <div class="kpi-value-row">
-            <span class="kpi-number" id="valTodayKwh">11.90</span>
+            <span class="kpi-number" id="valTodayKwh">--</span>
             <span class="kpi-unit">kWh</span>
           </div>
           <div class="kpi-footer">
-            <span class="chip-pill">↓ 0.59 kWh</span>
+            <span class="chip-pill" id="valSavedToday">--</span>
             <span class="kpi-subtext" data-i18n="saved_today">Saved Today</span>
           </div>
           <!-- Sparkline Wave SVG -->
@@ -266,11 +266,11 @@
             </div>
           </div>
           <div class="kpi-value-row">
-            <span class="kpi-number">12.49</span>
+            <span class="kpi-number" id="valAvgDailyKwh">--</span>
             <span class="kpi-unit">kWh</span>
           </div>
           <div class="kpi-footer">
-            <span class="kpi-subtext"><strong style="color:var(--text-main);">Target:</strong> ≤ 13.0 kWh</span>
+            <span class="kpi-subtext" id="valAvgTarget"><strong style="color:var(--text-main);">Target:</strong> ≤ 10.0 kWh</span>
           </div>
           <!-- Sparkline Wave SVG with Target Line -->
           <div class="kpi-sparkline">
@@ -293,11 +293,11 @@
             </div>
           </div>
           <div class="kpi-value-row">
-            <span class="kpi-number">334.50</span>
+            <span class="kpi-number" id="valCurrentBill">--</span>
             <span class="kpi-unit">EGP</span>
           </div>
           <div class="kpi-footer">
-            <span class="chip-pill amber" data-i18n="wafar_discount">↓ 8.00 EGP WAFAR Discount</span>
+            <span class="chip-pill amber" id="valBillDiscount" data-i18n="wafar_discount">↓ 0.00 EGP WAFAR Discount</span>
           </div>
           <!-- Amber Wave Sparkline -->
           <div class="kpi-sparkline">
@@ -318,11 +318,11 @@
             </div>
           </div>
           <div class="kpi-value-row">
-            <span class="kpi-number" id="valWafarPoints">80</span>
+            <span class="kpi-number" id="valWafarPoints">--</span>
             <span class="kpi-unit">pts</span>
           </div>
           <div class="kpi-footer">
-            <span class="chip-pill">↑ 8 EGP discount</span>
+            <span class="chip-pill" id="valPointsDiscount">↑ 0 EGP discount</span>
           </div>
           <!-- Green Sparkline -->
           <div class="kpi-sparkline">
@@ -399,33 +399,33 @@
               <div class="donut-layout">
                 <!-- SVG Donut Chart -->
                 <div class="donut-chart-box">
-                  <svg class="donut-svg" viewBox="0 0 100 100">
+                  <svg class="donut-svg" id="donutSvg" viewBox="0 0 100 100">
                     <circle cx="50" cy="50" r="38" fill="none" stroke="var(--border-subtle)" stroke-width="14"></circle>
-                    <!-- Lighting (35%) -->
-                    <circle cx="50" cy="50" r="38" fill="none" stroke="#587b44" stroke-width="14" stroke-dasharray="83.56 238.76" stroke-dashoffset="0"></circle>
-                    <!-- Appliances (30%) -->
-                    <circle cx="50" cy="50" r="38" fill="none" stroke="#8aa57a" stroke-width="14" stroke-dasharray="71.63 238.76" stroke-dashoffset="-83.56"></circle>
-                    <!-- Cooling (20%) -->
-                    <circle cx="50" cy="50" r="38" fill="none" stroke="#d5b66d" stroke-width="14" stroke-dasharray="47.75 238.76" stroke-dashoffset="-155.19"></circle>
-                    <!-- Others (15%) -->
-                    <circle cx="50" cy="50" r="38" fill="none" stroke="#e8a735" stroke-width="14" stroke-dasharray="35.81 238.76" stroke-dashoffset="-202.94"></circle>
+                    <!-- Lighting -->
+                    <circle id="donutSlice1" cx="50" cy="50" r="38" fill="none" stroke="#587b44" stroke-width="14" stroke-dasharray="83.56 238.76" stroke-dashoffset="0"></circle>
+                    <!-- Appliances -->
+                    <circle id="donutSlice2" cx="50" cy="50" r="38" fill="none" stroke="#8aa57a" stroke-width="14" stroke-dasharray="71.63 238.76" stroke-dashoffset="-83.56"></circle>
+                    <!-- Cooling -->
+                    <circle id="donutSlice3" cx="50" cy="50" r="38" fill="none" stroke="#d5b66d" stroke-width="14" stroke-dasharray="47.75 238.76" stroke-dashoffset="-155.19"></circle>
+                    <!-- Others -->
+                    <circle id="donutSlice4" cx="50" cy="50" r="38" fill="none" stroke="#e8a735" stroke-width="14" stroke-dasharray="35.81 238.76" stroke-dashoffset="-202.94"></circle>
                   </svg>
                   <div class="donut-center-info">
-                    <span class="donut-center-val">11.90</span>
+                    <span class="donut-center-val" id="donutCenterVal">--</span>
                     <span class="donut-center-unit">kWh</span>
                   </div>
                 </div>
 
                 <!-- Breakdown Legend -->
-                <div class="breakdown-legend">
+                <div class="breakdown-legend" id="breakdownLegend">
                   <div class="breakdown-row">
                     <div class="breakdown-label-group">
                       <span class="breakdown-dot" style="background-color: #587b44;"></span>
                       <span data-i18n="cat_lighting">Lighting</span>
                     </div>
                     <div>
-                      <span class="breakdown-pct">35%</span>
-                      <span class="breakdown-kwh">4.17 kWh</span>
+                      <span class="breakdown-pct" id="breakdownPctLighting">--</span>
+                      <span class="breakdown-kwh" id="breakdownKwhLighting">-- kWh</span>
                     </div>
                   </div>
 
@@ -435,8 +435,8 @@
                       <span data-i18n="cat_appliances">Appliances</span>
                     </div>
                     <div>
-                      <span class="breakdown-pct">30%</span>
-                      <span class="breakdown-kwh">3.57 kWh</span>
+                      <span class="breakdown-pct" id="breakdownPctAppliances">--</span>
+                      <span class="breakdown-kwh" id="breakdownKwhAppliances">-- kWh</span>
                     </div>
                   </div>
 
@@ -446,8 +446,8 @@
                       <span data-i18n="cat_cooling">Cooling</span>
                     </div>
                     <div>
-                      <span class="breakdown-pct">20%</span>
-                      <span class="breakdown-kwh">2.38 kWh</span>
+                      <span class="breakdown-pct" id="breakdownPctCooling">--</span>
+                      <span class="breakdown-kwh" id="breakdownKwhCooling">-- kWh</span>
                     </div>
                   </div>
 
@@ -457,8 +457,8 @@
                       <span data-i18n="cat_others">Others</span>
                     </div>
                     <div>
-                      <span class="breakdown-pct">15%</span>
-                      <span class="breakdown-kwh">1.78 kWh</span>
+                      <span class="breakdown-pct" id="breakdownPctOthers">--</span>
+                      <span class="breakdown-kwh" id="breakdownKwhOthers">-- kWh</span>
                     </div>
                   </div>
                 </div>
@@ -478,36 +478,12 @@
               <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">kWh</div>
 
               <!-- Monthly Bar Chart -->
-              <div class="monthly-chart-box">
-                <!-- Apr -->
-                <div class="month-bar-col">
-                  <div class="month-bar-pill" style="height: 56px;" title="Apr: 11.2 kWh"></div>
-                  <span class="month-name">Apr</span>
-                </div>
-
-                <!-- May -->
-                <div class="month-bar-col">
-                  <div class="month-bar-pill" style="height: 78px;" title="May: 14.1 kWh"></div>
-                  <span class="month-name">May</span>
-                </div>
-
-                <!-- Jun -->
-                <div class="month-bar-col">
-                  <div class="month-bar-pill" style="height: 70px;" title="Jun: 12.9 kWh"></div>
-                  <span class="month-name">Jun</span>
-                </div>
-
-                <!-- Jul -->
-                <div class="month-bar-col">
-                  <div class="month-bar-pill" style="height: 52px;" title="Jul: 10.1 kWh"></div>
-                  <span class="month-name">Jul</span>
-                </div>
-
-                <!-- Aug (Active with Badge) -->
+              <div class="monthly-chart-box" id="monthlyChartBox">
+                <!-- Apr (Active with Badge) -->
                 <div class="month-bar-col active">
-                  <div class="month-tooltip-badge">11.90 kWh</div>
-                  <div class="month-bar-pill" style="height: 64px;" title="Aug: 11.90 kWh"></div>
-                  <span class="month-name" style="font-weight: 800; color: var(--text-main);">Aug</span>
+                  <div class="month-tooltip-badge" id="monthlyActiveBadge">-- kWh</div>
+                  <div class="month-bar-pill" id="monthlyActivePill" style="height: 64px;" title="Apr"></div>
+                  <span class="month-name" id="monthlyActiveName" style="font-weight: 800; color: var(--text-main);">Apr</span>
                 </div>
               </div>
             </div>
@@ -525,8 +501,8 @@
               </div>
               <div class="insight-content">
                 <h4 data-i18n="insight_ai_title">AI Insight</h4>
-                <div class="insight-main-text" data-i18n="insight_ai_desc">
-                  Your consumption is <strong>8% lower</strong> than last week. Keep it up!
+                <div class="insight-main-text" id="insightAiDesc" data-i18n="insight_ai_desc">
+                  Your consumption is <strong>optimal</strong>. Keep it up!
                 </div>
                 <a href="../assistant/index.html" class="insight-link">
                   <span data-i18n="view_details">View Details</span> &rarr;
@@ -545,7 +521,7 @@
               <div class="insight-content">
                 <h4 data-i18n="insight_saving_title">Best Saving Time</h4>
                 <div class="insight-main-text">
-                  <strong style="color:var(--text-main); font-size:13.5px;">13:00 - 16:00</strong>
+                  <strong style="color:var(--text-main); font-size:13.5px;" id="insightSavingTime">13:00 - 16:00</strong>
                 </div>
                 <div class="insight-subtext" data-i18n="insight_saving_desc">Your lowest usage window</div>
               </div>
@@ -563,9 +539,9 @@
               <div class="insight-content">
                 <h4 data-i18n="insight_device_title">Top Consuming Device</h4>
                 <div class="insight-main-text">
-                  <strong style="color:var(--text-main); font-size:13.5px;" data-i18n="device_ac">Air Conditioner</strong>
+                  <strong style="color:var(--text-main); font-size:13.5px;" id="insightTopDevice" data-i18n="device_ac">Air Conditioner</strong>
                 </div>
-                <div class="insight-subtext"><strong style="color:var(--primary-green);">38%</strong> <span data-i18n="of_total">of total usage</span></div>
+                <div class="insight-subtext"><strong style="color:var(--primary-green);" id="insightTopDevicePct">--%</strong> <span data-i18n="of_total">of total usage</span></div>
               </div>
             </div>
 
@@ -583,9 +559,9 @@
               <div class="insight-content">
                 <h4 data-i18n="insight_bill_title">Projected Bill</h4>
                 <div class="insight-main-text">
-                  <strong style="color:var(--text-main); font-size:13.5px;">312.50 EGP</strong>
+                  <strong style="color:var(--text-main); font-size:13.5px;" id="insightProjectedBill">-- EGP</strong>
                 </div>
-                <div class="insight-subtext">↓ 21.00 EGP <span data-i18n="vs_last_month">vs last month</span></div>
+                <div class="insight-subtext" id="insightProjectedSub">-- <span data-i18n="vs_last_month">vs last month</span></div>
               </div>
             </div>
           </div>
