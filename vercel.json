@@ -1,0 +1,10 @@
+{
+  "cleanUrls": false,
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/pages/loading/index.html",
+      "permanent": false
+    }
+  ]
+}
