@@ -106,7 +106,12 @@ function showToast(msg, icon = '✓') {
       }
 
       try {
-        const res = await AssistantAPI.getWeeklySummary(householdId);
+        const question = isAr ? 'الملخص الأسبوعي' : 'Weekly Summary';
+
+        const res = await AssistantAPI.getWeeklySummary(
+          householdId,
+          question
+        );
         const typingEl = document.getElementById('aiTypingBubble');
         if (typingEl) typingEl.remove();
 
@@ -207,7 +212,12 @@ function showToast(msg, icon = '✓') {
       }
 
       try {
-        const res = await AssistantAPI.getTips(householdId);
+        const question = isAr ? 'نصائح ذكية' : 'Smart Tips';
+
+        const res = await AssistantAPI.getTips(
+          householdId,
+          question
+        );
         const typingEl = document.getElementById('aiTypingBubble');
         if (typingEl) typingEl.remove();
 

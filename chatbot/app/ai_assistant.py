@@ -117,34 +117,44 @@ def get_ai_response(household_id, question):
     answer = ask_ai(context, question)
     return answer
 
+def get_smart_tip(household_id, question):
 
-def get_smart_tip(household_id):
     context = build_household_context(household_id)
 
     if context is None:
         return "عذرًا، لا توجد بيانات لهذا المنزل. تأكد من رقم المنزل وحاول مرة أخرى."
 
-    fixed_question = """
-    قدّم نصيحة واحدة عملية ومحددة لتقليل استهلاك الكهرباء لهذا البيت.
+    instructions = """
+    Provide one practical and specific tip to reduce this household's electricity consumption.
 
-    قواعد مهمة:
-    - استخدم بيانات البيت الموجودة أمامك فقط لتحديد سبب النصيحة واتجاهها.
-    - ممنوع اختراع أو افتراض أي بيانات غير موجودة في بيانات البيت، مثل نوع الأجهزة، عدد أجهزة التكييف، قدرة الأجهزة، أو عدد ساعات تشغيل جهاز معين.
-    - يمكنك استخدام المعرفة العامة الموثوقة عن طرق توفير الكهرباء، لكن لا تعتبر أي معلومة غير موجودة في بيانات البيت حقيقة عن هذا البيت.
-    - اربط النصيحة بمتغيرين على الأقل من بيانات البيت، مثل:
-    * Household Size + Has_AC
-    * Avg Peak Usage + Has_AC
-    * Total Consumption + Avg Temperature
-    * Avg Consumption + Household Size
-    - لا تقدم نصائح عامة أو بديهية مثل إطفاء الأنوار أو تقليل استخدام الأجهزة وقت الذروة.
-    - اجعل النصيحة قابلة للتطبيق فعليًا، مثل تحسين استخدام التكييف، ضبط درجة الحرارة، تقليل الأحمال في أوقات معينة، أو تحسين نمط الاستهلاك، ولكن فقط إذا كانت البيانات تدعم ذلك.
-    - إذا لم تكن بيانات البيت كافية لتقديم نصيحة محددة بثقة، قل ذلك بوضوح بدل اختراع معلومة.
-    - لا تخترع نسبة أو رقمًا لتوفير الكهرباء أو المال. استخدم رقمًا من بيانات البيت نفسها إذا كان مفيدًا، أو اذكر أن مقدار التوفير يعتمد على طريقة الاستخدام الفعلية.
-    - اكتب النصيحة في جملتين كحد أقصى، بأسلوب ودود ومباشر.
+    Important rules:
+    - Use ONLY information explicitly provided in the household data.
+    - Do NOT invent, assume, or infer any household information.
+    - Do NOT mention any electrical appliance unless that appliance is explicitly mentioned in the household data.
+    - For example, do NOT assume the household has a washing machine, dishwasher, refrigerator, heater, lights, or any other appliance unless it is explicitly stated in the data.
+    - Do NOT invent or assume usage times, operating hours, peak hours, or specific times such as "after 8 PM" unless they are explicitly provided in the household data.
+    - Do NOT invent any numbers, consumption values, temperatures, percentages, savings amounts, or other measurements.
+    - Every number mentioned in the answer must come directly from the household data.
+    - You may use general knowledge about electricity saving ONLY to explain how to act on a pattern that is actually supported by the household data.
+    - Do NOT use general knowledge to assume the reason behind the household's consumption.
+    - Connect the tip to at least two variables that are explicitly present in the household data.
+    - Do not give generic tips.
+    - If the available data is not sufficient to provide a specific and reliable tip, say so clearly instead of making an assumption.
+    - Keep the answer within two sentences.
     """
 
-    answer = ask_ai(context, fixed_question)
-    return answer
+    prompt = f"""
+{instructions}
+
+User question: {question}
+
+Household data:
+{context}
+
+Answer the user's question based ONLY on the household data above.
+"""
+
+    return ask_ai(context, prompt)
 
 
 def build_weekly_context(summary):
@@ -167,7 +177,7 @@ Weekly data for this household (last 7 available days):
     return context
 
 
-def get_weekly_summary(household_id):
+def get_weekly_summary(household_id, question):
 
     df = fetch_household_data(household_id)
 
@@ -177,9 +187,7 @@ def get_weekly_summary(household_id):
     summary = weekly_summary(df)
     context = build_weekly_context(summary)
 
-    fixed_question = "لخصلي نمط استهلاك الكهرباء بتاعي الأسبوع ده بأسلوب ودود وبسيط."
-
-    answer = ask_ai(context, fixed_question)
+    answer = ask_ai(context, question)
     return answer
 
 

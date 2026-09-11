@@ -1181,11 +1181,13 @@ const AssistantAPI = {
    * Fetch weekly summary from WAFAR Chatbot Backend
    * Endpoint: GET https://wafar.onrender.com/weekly-summary/{household_id}
    */
-  getWeeklySummary: async (householdId) => {
+  getWeeklySummary: async (householdId, question) => {
     const effectiveHouseholdId = householdId || localStorage.getItem("wafar_household_id") || "";
 
     try {
-      const response = await fetch(`https://wafar.onrender.com/weekly-summary/${encodeURIComponent(String(effectiveHouseholdId))}`, {
+      const response = await fetch(
+    `https://wafar.onrender.com/weekly-summary/${encodeURIComponent(String(effectiveHouseholdId))}?question=${encodeURIComponent(String(question || ""))}`,
+    {
         method: "GET",
         headers: {
           "Content-Type": "application/json"
@@ -1228,12 +1230,14 @@ const AssistantAPI = {
    * Fetch smart tips from WAFAR Chatbot Backend
    * Endpoint: GET https://wafar.onrender.com/tips/{household_id}
    */
-  getTips: async (householdId) => {
+  getTips: async (householdId, question) => {
     const effectiveHouseholdId = householdId || localStorage.getItem("wafar_household_id") || "";
 
     try {
-      const response = await fetch(`https://wafar.onrender.com/tips/${encodeURIComponent(String(effectiveHouseholdId))}`, {
-        method: "GET",
+      const response = await fetch(
+        `https://wafar.onrender.com/tips/${encodeURIComponent(String(effectiveHouseholdId))}?question=${encodeURIComponent(String(question || ""))}`,
+        {
+          method: "GET",
         headers: {
           "Content-Type": "application/json"
         }
@@ -1274,9 +1278,9 @@ const AssistantAPI = {
   /**
    * Alias for getTips
    */
-  getSmartTips: async (householdId) => {
-    return AssistantAPI.getTips(householdId);
-  },
+  getSmartTips: async (householdId, question) => {
+    return AssistantAPI.getTips(householdId, question);
+},
 
   /**
    * Legacy alias

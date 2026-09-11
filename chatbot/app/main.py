@@ -19,17 +19,22 @@ class AskRequest(BaseModel):
 
 
 @app.get("/weekly-summary/{household_id}")
-def weekly_summary_endpoint(household_id: str):
-    answer = get_weekly_summary(household_id)
+def weekly_summary_endpoint(household_id: str, question: str):
+
+    answer = get_weekly_summary(household_id, question)
+
     return {"answer": answer}
+
 
 
 @app.get("/tips/{household_id}")
-def smart_tip_endpoint(household_id: str):
-    answer = get_smart_tip(household_id)
+def smart_tip_endpoint(household_id: str, question: str):
+    answer = get_smart_tip(household_id, question)
     return {"answer": answer}
+
 
 @app.post("/ask")
 def ask(request: AskRequest):
     answer = get_ai_response(request.household_id, request.question)
     return {"answer": answer}
+    
